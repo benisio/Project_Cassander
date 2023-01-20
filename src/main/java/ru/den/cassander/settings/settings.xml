@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+    <directories>
+        <directory type="CURRENT">
+            <path>D:\PatronageAppOutput\</path>
+        </directory>
+        <directory type="DEFAULT">
+            <path>C:\Users\Public\Documents\</path>
+        </directory>
+    </directories>
+    <currentDirectoryType>CUSTOM</currentDirectoryType>
+    <emptyFieldsCheckEnabled>false</emptyFieldsCheckEnabled>
+</settings>

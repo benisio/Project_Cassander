@@ -1,0 +1,164 @@
+package ru.den.cassander.settings;
+
+import ru.den.cassander.windows.DirectoryChooser;
+
+import javax.xml.bind.annotation.*;
+import java.util.List;
+
+/**
+ * Created on 10.11.2015.
+ *
+ * Класс-посредник между приложением и файлом настроек settings.xml. Получает данные из файла настроек и ползволяет их
+ * перезаписывать. Содержит методы чтения данных из файла настроек и записи данных в него.
+ * Связывает файл настроек settings.xml с полями этого класса, позволяя считать из него данные и записывать их.
+ *
+ * @author Denis Vereshchagin
+ */
+@XmlRootElement(name = "settings")
+@XmlAccessorType(XmlAccessType.NONE)
+public class Settings implements DirectoryChooser {
+
+    // TODO перепутал current и custom ? переделать в енум ? перенести в Directory ?
+    private static final String CURRENT = "current";
+    private static final String DEFAULT = "default";
+
+    // тип текущей используемой папки для хранения документов
+    enum CurrentDirectoryType {
+        DEFAULT, // по умолчанию
+        CUSTOM   // пользовательская
+    }
+
+    @XmlElementWrapper
+    @XmlElement(name = "directory")
+    private List<Directory> directories;
+
+    @XmlElement(name = "currentDirectoryType")
+    private CurrentDirectoryType type; // may be custom or default
+
+    @XmlElement(name = "emptyFieldsCheckEnabled")
+    private boolean emptyFieldsCheckEnabled;
+
+    // возвращает папку по умолчанию
+    private Directory getDefaultDirectory() { // make private ?
+        Directory directory = new Directory();
+
+        for (Directory d : directories) {
+            if (d.getType().equals(DEFAULT)) {
+                directory = d;
+            }
+        }
+
+        return directory;
+    }
+
+    // возвращает папку определенного типа (по умолчанию или текущую)
+    private Directory getDirectory(Settings.Directory.DirectoryType type) { // make private ?
+        Directory directory = new Directory();
+
+        for (Directory d : directories) {
+            if (d.getType().equals(DEFAULT)) {
+                directory = d;
+            }
+        }
+
+        return directory;
+    }
+
+    // возвращает путь к папке по умолчанию
+    @Override
+    public String getDefaultDirectoryPath() {
+        return getDefaultDirectory().getPath();
+    }
+
+    // устанавливает путь к папке по умолчанию
+    public void setDefaultDirectoryPath(String path) {
+        getDefaultDirectory().setPath(path);
+    }
+
+    // возвращает текущую используемую папку, заданную в настройках
+    private Directory getCurrentDirectory() { // make private ?
+        Directory directory = new Directory();
+
+        for (Directory d : directories) {
+            if (d.getType().equals(CURRENT)) {
+                directory = d;
+            }
+        }
+
+        return directory;
+    }
+
+    // возвращает путь к текущей используемой папке
+    @Override
+    public String getCurrentDirectoryPath() {
+        return getCurrentDirectory().getPath();
+    }
+
+    // устанавливает путь к текущей используемой папке
+    @Override
+    public void setCurrentDirectoryPath(String path) {
+        getCurrentDirectory().setPath(path);
+    }
+
+    // возвращает тип текущей используемой папки - по умолчанию или пользовательская
+    public CurrentDirectoryType getCurrentDirectoryType() {
+        return type;
+    }
+
+    // устанавливает тип текущей используемой папки - по умолчанию или пользовательская
+    public void setCurrentDirectoryType(CurrentDirectoryType type) {
+        this.type = type;
+    }
+
+    // возвращает true, если включена проверка на незаполненные поля, и false в противном случае
+    public boolean isEmptyFieldsCheckEnabled() {
+        return emptyFieldsCheckEnabled;
+    }
+
+    // устанавливает статус проверки на незаполненные поля
+    // true - включена
+    // false - отключена
+    public void setEmptyFieldsCheckStatus(boolean isEnabled) {
+        this.emptyFieldsCheckEnabled = isEnabled;
+    }
+
+    // Класс-представление элемента <directory> в файле настроек
+    static class Directory {
+
+        private String type;
+        private String path;
+
+        // значения, которые может принимать аттрибут type элемента <directory>
+        enum DirectoryType {
+
+            CURRENT, DEFAULT;
+
+            /*DirectoryType() {
+
+            }
+
+            @Override
+            public String toString() {
+                return name().toLowerCase();
+            }*/
+        }
+
+        @XmlAttribute
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        @XmlElement
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+    } // 2.1
+}

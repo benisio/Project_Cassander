@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "directories": [
+      {
+        "type": "CURRENT",
+        "path": "C:\\temp"
+      },
+
+      {
+        "type": "DEFAULT",
+        "path": "C:\\temp"
+      }
+    ],
+    "currentDirectoryType": "CUSTOM",
+    "emptyFieldsCheckEnabled": true
+  }
+}

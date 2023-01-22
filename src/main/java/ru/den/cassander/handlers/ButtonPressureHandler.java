@@ -2,7 +2,6 @@ package ru.den.cassander.handlers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Date;
 import javax.swing.*;
 
@@ -12,8 +11,6 @@ import ru.den.cassander.settings.XMLSettingsRW;
 import ru.den.cassander.windows.CompleteWindow;
 import ru.den.cassander.windows.DirectoryChooserDialog;
 
-import static ru.den.cassander.Main.getMainWindow;
-
 /**
  * Created on 07.08.2015.
  *
@@ -21,6 +18,8 @@ import static ru.den.cassander.Main.getMainWindow;
  */
 @Deprecated
 public class ButtonPressureHandler implements ActionListener {
+    // TODO код в хэндлерах - полнейший пиздец ! переписать, сделав обработчики каждого действия в своем уникальном методе
+
     public final Date TODAY;
 
     private CompleteWindow completeWindow;
@@ -54,15 +53,15 @@ public class ButtonPressureHandler implements ActionListener {
                 completeWindow.setVisible(true);
 
                 break;
-/*
+
             case "ОК":
                 //completeWindow.dispose();
                 System.err.println("не юзаю этот блок в батон прэше хэндлере:60");
-                break;*/
+                break;
 
                 // кнопка "Сохранить" в диалоге выбора папки сохранения документов
             case "Сохранить":
-                directoryChooserDialog = getMainWindow().getController().getDirectoryChooser();
+                /*directoryChooserDialog = getMainWindow().getController().getDirectoryChooser();
                 chooseDirectoryField = directoryChooserDialog.getChooseDirectoryField();
                 JRadioButton defaultRadioButton = directoryChooserDialog.getDefaultRadioButton();
 
@@ -73,11 +72,12 @@ public class ButtonPressureHandler implements ActionListener {
                 settings.setCurrentDirectoryType(defaultRadioButton.isSelected() ?
                         Settings.CurrentDirectoryType.DEFAULT : Settings.CurrentDirectoryType.CUSTOM);
 
-                directoryChooserDialog.dispose();
+                directoryChooserDialog.dispose();*/
+                System.out.println("обработчик удален из ButtonPressureHandler");
                 break;
 
             case "...":
-                directoryChooserDialog = getMainWindow().getController().getDirectoryChooser();
+                /*directoryChooserDialog = getMainWindow().getController().getDirectoryChooser();
                 chooseDirectoryField = directoryChooserDialog.getChooseDirectoryField();
                 JButton chooseButton = directoryChooserDialog.getChooseButton();
 
@@ -96,7 +96,9 @@ public class ButtonPressureHandler implements ActionListener {
                     }
 
                     chooseDirectoryField.setText(chosenDirectoryPath);
-                }
+                }*/
+
+                System.out.println("обработчик тоже удален из ButtonPressureHandler");
 
                 break;
         }

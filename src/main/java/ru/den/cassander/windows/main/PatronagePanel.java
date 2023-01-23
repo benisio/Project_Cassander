@@ -5,70 +5,62 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Vector;
 
-import ru.den.cassander.handlers.ButtonPressureHandler;
-import ru.den.cassander.windows.main.AbstractPanel;
+import ru.den.cassander.document_creators.PatronageCreator;
+import ru.den.cassander.windows.CompleteWindow;
 
 import static java.awt.GridBagConstraints.*;
 import static ru.den.cassander.Constants.*;
 
 /**
  * Created on 11.09.2015.
+ * Updated on January 2023
+ * Класс, создающий GUI для раздела "Патронаж"
  *
  * @author Denis Vereshchagin
  */
 public class PatronagePanel extends AbstractPanel {
 
-    private ButtonPressureHandler handler = new ButtonPressureHandler();
-
-    private JButton createDocumentButton;
-
-    private Blank blank1;
-    private Blank blank2;
+    private PatronagePanelController controller; // обработчик нажатия кнопки
     private Blank[] blanks;
 
+    // конструктор
     public PatronagePanel() {
-        super();
+        super(); // дада, первым делом при вызове конструктора класса вызывается конструктор его родителя
+        controller = new PatronagePanelController();
     }
 
     public Blank[] getBlanks() {
         return blanks;
     }
 
-    public Blank getBlank1() {
-        return blank1;
-    }
-
-    public Blank getBlank2() {
-        return blank2;
-    }
-
-    public ButtonPressureHandler getHandler() {
-        return handler;
-    }
-
+    // создает 2 бланка данной формы "Патронаж"
     public void createBlanks() {
-        blank1 = new Blank((byte) 1);
-        blank2 = new Blank((byte) 2);
-
         blanks = new Blank[2];
-        blanks[0] = blank1;
-        blanks[1] = blank2;
+        blanks[0] = new Blank(1);
+        blanks[1] = new Blank(2);
     }
 
+    // создает кнопку "Создать документ"
     public void createButton() {
-        createDocumentButton = new JButton("Создать документ");
-        createDocumentButton.addActionListener(handler);
+        // кнопка "Создать документ"
+        JButton createDocumentButton = new JButton("Создать документ");
+        createDocumentButton.addActionListener(e -> controller.createDocButtonClicked());
         add(createDocumentButton, new GridBagConstraints(4, 16, 1, 1, 0.9, 0.9, GridBagConstraints.WEST,
                 GridBagConstraints.NONE, new Insets(3, 1, 3, 1), 0, 0));
     }
 
     /**
      * Created on 07.08.2015.
+     * Updated on January 2023
+     * Шаблон документа "Патронаж" состоит из двух одинаковых шаблонов-"бланков": бланк 1 и бланк 2.
+     * Данный класс описывает GUI для такого бланка.
      *
      * @author Denis Vereshchagin
      */
     public class Blank {
-        @SuppressWarnings("UnusedDeclaration") private byte number;
+        @SuppressWarnings("UnusedDeclaration") private int blankNumber;
+
+        // элементы GUI
 
         @SuppressWarnings("UnusedDeclaration") private JLabel blankLabel;
         @SuppressWarnings("UnusedDeclaration") private JLabel dateLabel;
@@ -82,7 +74,6 @@ public class PatronagePanel extends AbstractPanel {
         @SuppressWarnings("UnusedDeclaration") private JLabel behaviorLabel;
         @SuppressWarnings("UnusedDeclaration") private JLabel indexesLabel;
 
-        //private JTextField dateField;
         private JTextField patronageField;
         private JTextField modeField;
         private JTextField behaviorField;
@@ -93,16 +84,22 @@ public class PatronagePanel extends AbstractPanel {
         private JComboBox<String> conditionField;
         private JComboBox<String> skinField;
 
-        public Blank(byte number) {
-            this.number = number;
+        // конструктор
+        public Blank(int blankNumber) {
+            this.blankNumber = blankNumber;
 
-            createLabels(number);
-            createTextFields(number);
-            createComboBoxes(number);
-            createTextArea(number);
+            createAllLabels(blankNumber);
+            createAllTextFields(blankNumber);
+            createAllComboBoxes(blankNumber);
+            createTextArea(blankNumber);
 
             fillTheDateField();
         }
+
+        // и снова геттеры для элементов GUI, которые я использую в PatronageCreator
+        // м.б. имеет смысл сделать так же, как я сделал в DirectoryChooserDialog ?
+        // т.е. добавить сюда публичные методы, которые делают что-то необходимое с элементами GUI, и
+        // вызывать их в PatronageCreator ???
 
         public JTextField getDateField() {
             return dateField;
@@ -140,44 +137,51 @@ public class PatronagePanel extends AbstractPanel {
             return indexesField;
         }
 
-        private void createLabels(byte number) {
-            blankLabel      = createOneLabel("Бланк " + number, (byte) 2, (byte) 0, CENTER, number);
-            dateLabel       = createOneLabel(DATE, (byte) 0, (byte) 1, CENTER, number);
-            patronageLabel  = createOneLabel("Патронаж м/с в ", (byte) 2, (byte) 1, EAST, number);
-            monthsLabel     = createOneLabel("мес. жизни", (byte) 4, (byte) 1, WEST, number);
-            complaintsLabel = createOneLabel(COMPLAINTS, (byte) 1, (byte) 2, CENTER, number);
-            feedingLabel    = createOneLabel("Вскармливание: ", (byte) 1, (byte) 3, CENTER, number);
-            modeLabel       = createOneLabel("Режим: ", (byte) 3, (byte) 3, CENTER, number);
-            conditionLabel  = createOneLabel("Состояние: ", (byte) 1, (byte) 4, CENTER, number);
-            skinLabel       = createOneLabel("Кожа, слизистые: ", (byte) 3, (byte) 4, CENTER, number);
-            behaviorLabel   = createOneLabel("Поведение: ", (byte) 1, (byte) 5, CENTER, number);
-            indexesLabel    = createOneLabel("Показатели НПР: ", (byte) 1, (byte) 6, CENTER, number);
+        // создает все метки в бланке с номером blankNumber
+        private void createAllLabels(int blankNumber) {
+            blankLabel      = createLabel("Бланк " + blankNumber, 2, 0, CENTER, blankNumber);
+            dateLabel       = createLabel(DATE, 0, 1, CENTER, blankNumber);
+            patronageLabel  = createLabel("Патронаж м/с в ", 2, 1, EAST, blankNumber);
+            monthsLabel     = createLabel("мес. жизни", 4, 1, WEST, blankNumber);
+            complaintsLabel = createLabel(COMPLAINTS, 1, 2, CENTER, blankNumber);
+            feedingLabel    = createLabel("Вскармливание: ", 1, 3, CENTER, blankNumber);
+            modeLabel       = createLabel("Режим: ", 3, 3, CENTER, blankNumber);
+            conditionLabel  = createLabel("Состояние: ", 1, 4, CENTER, blankNumber);
+            skinLabel       = createLabel("Кожа, слизистые: ", 3, 4, CENTER, blankNumber);
+            behaviorLabel   = createLabel("Поведение: ", 1, 5, CENTER, blankNumber);
+            indexesLabel    = createLabel("Показатели НПР: ", 1, 6, CENTER, blankNumber);
         }
 
-        private JLabel createOneLabel(String text, byte gridX, byte gridY, int anchor, byte number) {
+        // создает метку с текстом text в бланке с номером blankNumber
+        private JLabel createLabel(String text, int gridX, int gridY, int anchor, int blankNumber) {
             JLabel label = new JLabel(text);
 
-            add(label, new GridBagConstraints(gridX, gridY + getDeltaGridY(number), 1, 1, 0.9, 0.9,
+            add(label, new GridBagConstraints(gridX, gridY + getDeltaGridY(blankNumber), 1, 1, 0.9, 0.9,
                     anchor, NONE, new Insets(3, 1, 3, 1), 0, 0));
 
             return label;
         }
 
-        private void createTextFields(byte number) {
-            dateField       = createOneField((byte) 10, (byte) 1, (byte) 1, WEST, number);
-            patronageField  = createOneField((byte) 10, (byte) 3, (byte) 1, WEST, number);
-            modeField       = createOneField((byte) 15, (byte) 4, (byte) 3, WEST, number);
-            behaviorField   = createOneField((byte) 30, (byte) 2, (byte) 5, WEST, number);
+        // создает все текстовые поля в бланке с номером blankNumber
+        private void createAllTextFields(int blankNumber) {
+            dateField       = createTextField(10, 1, 1, WEST, blankNumber);
+            patronageField  = createTextField(10, 3, 1, WEST, blankNumber);
+            modeField       = createTextField(15, 4, 3, WEST, blankNumber);
+            behaviorField   = createTextField(30, 2, 5, WEST, blankNumber);
         }
 
-        private void createComboBoxes(byte number) {
-            complaintsField = createOneBox(new String[]{"у мамы нет"}, (byte) 2, (byte) 2, WEST, number);
-            feedingField    = createOneBox(new String[]{"грудное", "искусственное", "смешанное"}, (byte)2, (byte)3, WEST, number);
-            conditionField  = createOneBox(new String[]{"удовл-ное", "средней тяжести", "тяжёлое"}, (byte)2, (byte)4, WEST, number);
-            skinField       = createOneBox(new String[]{"б/особенностей"}, (byte) 4, (byte) 4, WEST, number);
+        // создает все выпадающие списки в бланке с номером blankNumber
+        private void createAllComboBoxes(int blankNumber) {
+            complaintsField = createComboBox(new String[]{"у мамы нет"},2,2, WEST, blankNumber);
+            feedingField    = createComboBox(new String[]{"грудное", "искусственное", "смешанное"},2,3, WEST, blankNumber);
+            conditionField  = createComboBox(new String[]{"удовл-ное", "средней тяжести", "тяжёлое"},2,4, WEST, blankNumber);
+            skinField       = createComboBox(new String[]{"б/особенностей"},4,4, WEST, blankNumber);
         }
 
-        private JComboBox<String> createOneBox(String[] words, byte gridX, byte gridY, int anchor, byte number) {
+        // создает выпадающий список, содержащий элементы из массива words, в бланке с номером blankNumber
+        private JComboBox<String> createComboBox(String[] words, int gridX, int gridY, int anchor, int blankNumber) {
+            // используем здесь Vector, а не ArrayList, т.к. ниже мы используем конструктор JComboBox(Vector v)
+            // Конструктора JComboBox(List list) в классе JComboBox нет
             Vector<String> vector = new Vector<>();
             vector.addAll(Arrays.asList(words));
 
@@ -185,34 +189,36 @@ public class PatronagePanel extends AbstractPanel {
             comboBox.setEditable(true);
             comboBox.setSelectedItem(EMPTY_STRING);
 
-            add(comboBox, new GridBagConstraints(gridX, gridY + getDeltaGridY(number), 1, 1, 0.9, 0.9,
+            add(comboBox, new GridBagConstraints(gridX, gridY + getDeltaGridY(blankNumber), 1, 1, 0.9, 0.9,
                     anchor, NONE, new Insets(3, 1, 3, 1), 0, 0));
 
             return comboBox;
         }
 
-        private JTextField createOneField(byte size, byte gridX, byte gridY, int anchor, byte number) {
+        // создает текстовое поле в бланке с номером blankNumber
+        private JTextField createTextField(int size, int gridX, int gridY, int anchor, int blankNumber) {
             JTextField field = new JTextField(size);
 
-            add(field, new GridBagConstraints(gridX, gridY + getDeltaGridY(number), 1, 1, 0.9, 0.9,
+            add(field, new GridBagConstraints(gridX, gridY + getDeltaGridY(blankNumber), 1, 1, 0.9, 0.9,
                     anchor, NONE, new Insets(3, 1, 3, 1), 0, 0));
 
             return field;
         }
 
-        private void createTextArea(byte number) {
+        // создает текстовую область в бланке с номером blankNumber
+        private void createTextArea(int blankNumber) {
             indexesField = new JTextArea(5, 30);
 
             indexesField.setWrapStyleWord(true);
             indexesField.setLineWrap(true);
-            add(indexesField, new GridBagConstraints(2, 6 + getDeltaGridY(number), 1, 1, 0.9, 0.9,
+            add(indexesField, new GridBagConstraints(2, 6 + getDeltaGridY(blankNumber), 1, 1, 0.9, 0.9,
                     WEST, NONE, new Insets(3, 1, 3, 1), 0, 0));
         }
 
-        private byte getDeltaGridY(byte number) {
-            byte deltaGridY = 0;
+        private int getDeltaGridY(int blankNumber) {
+            int deltaGridY = 0;
 
-            switch (number) {
+            switch (blankNumber) {
                 case 1:
                 /*NOP*/
                     break;
@@ -222,10 +228,43 @@ public class PatronagePanel extends AbstractPanel {
                     break;
 
                 default:
-                    throw new IllegalArgumentException("аргумент \"number\" должен принимать значения 1 или 2.");
+                    throw new IllegalArgumentException("аргумент \"blankNumber\" должен принимать значения 1 или 2.");
             }
 
             return deltaGridY;
         }
+    }
+
+    /**
+     * Created on January 2023
+     * Класс-обработчик событий диалогового окна "Выбор папки для хранения документов"
+     *
+     * @author Denis Vereshchagin
+     */
+    private class PatronagePanelController {
+
+        // TODO продолжение ошибки, описанной в DirectoryChooserDialogController
+        /*
+        * 1. в файле настроек было следующее (я добавил чисто поржать и забыл про это):
+        * <directory type="CURRENT">
+            <path>блаблабла</path>
+          </directory>
+        *
+        * 2. открыл "Новый патронаж", заполнил данные
+        * 3. нажал "Создать документ"
+        * 4. Вылезло окно "Готово !" (в коде - CompleteWindow, вроде), с текстом "Файл блаблаблаПатронаж__02_01_2023 успешно создан"
+        * при этом прога никаких ошибок и исключений не выдает
+        * 5. после нажатия на "Открыть файл" прога выдает исключение
+        */
+
+        // обработчик нажатия кнопки "Создать документ"
+        private void createDocButtonClicked() {
+            PatronageCreator creator = new PatronageCreator();
+            creator.createDocument();
+
+            CompleteWindow completeWindow = new CompleteWindow(creator.DESTINATION_FILE_PATH);
+            completeWindow.setVisible(true);
+        }
+
     }
 }

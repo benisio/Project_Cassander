@@ -19,9 +19,29 @@ import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.
 
 /**
  * Created on 13.09.2015.
+ * Класс, создающий GUI для раздела "Осмотр взрослого"
  *
  * @author Denis Vereshchagin
  */
+/*
+ * TODO еще баг
+ * пиздец, сломался раздел "Осмотр взрослого". Сегодня 23 января. Заполняешь целиком форму, нажимаешь Создать
+ * а в документе всего 3 строчки. Нашел документ от 11 января, там все норм было.
+ * Upd а, нет, не совсем так. почему-то подумал, что дело может быть в том, что заполнены не все поля в форме.
+ * включил в настройках пункт "проверка незаполненных полей", снова нажал "Создать", прога выдала предупреждение
+ * о том, что не все поля заполнены. проверил, дозаполнил, нажал "Создать" и вуаля - документ создался целиком.
+ * Вроде этот баг связан с элементами GUI, от которых зависит работа других элементов: например, если выбираешь
+ * какое-то значение выпадающего списка, то при этом выборе разблокировывается и становится доступным какой-то
+ * элемент GUI, причем этот второй элемент не заполнен
+ *
+ * В качестве иллюстрации такого поведения проги сохранил два документа: 1-ый - с неполным текстом, 2-ой - с полным
+ * Лежит тут:
+ * C:\Users\Public\Documents\баг
+ *
+ * Upd Upd Похоже, если не заполнить какое-то поле, то все, что идет после него, не будет напечатано в документе.
+ * Яркий пример: не заполняем поле "Тип осмотра", заполняем остальное. В итоге документ будет пустой, так как
+ * "Тип осмотра" - это первое поле.
+ * */
 public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     private static final int PREF_WIDTH_1 = 170; // предпочтительная высота выпадающих списков в box1
@@ -33,6 +53,8 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     // TODO !!! ЗАДАНИЕ НА ВЕРСИЮ 2.1 !!!
     // TODO сделать проверку опциональной, если она есть, то сообщение должно перечислять пустые поля,
     // TODO status localis после мочи JTextArea
+
+    private ExaminationPanelController controller;
 
     private JButton createDocumentButton;
 
@@ -176,6 +198,11 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     public ExaminationOfTheAdultPanel() {
         super();
 
+        controller = new ExaminationPanelController();
+
+        /* для отдельного класса-контроллера
+        controller.setExaminationPanel(this);*/
+
         createDatePanel();
         createComplaintsPanel();
         createAnamnesisPanel();
@@ -227,16 +254,18 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         datePanel = createPanel(dateLabel, dateField);
     }
 
+    // кнопка "Добавить" работает неправильно:
+    // если в TextArea уже есть какой-то текст, то при нажатии кнопки "Добавить", выборе новых пунктов для добавления
+    // и нажатии "Ок" новые пункты не добавляются к уже написанному в TextArea тексту, а замещают его. Исправить.
+
+    // Панель "Жалобы"
     private JButton addComplaintsButton;
     private void createComplaintsPanel() {
         complaintsLabel = new JLabel(COMPLAINTS);
         complaintsArea = createTextArea();
         complaintsScrollPane = createScrollPane(complaintsArea);
         addComplaintsButton = new JButton("Добавить");
-        addComplaintsButton.addActionListener(event -> {
-            ComplaintsDialog complaintsDialog = new ComplaintsDialog();
-            complaintsDialog.setVisible(true);
-        });
+        addComplaintsButton.addActionListener(event -> controller.addComplaintsButtonClicked());
         complaintsPanel = createPanel(complaintsLabel, complaintsScrollPane, addComplaintsButton);
     }
 
@@ -261,26 +290,20 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         lymphaticNodesPanel = createPanel(new Component[]{lymphaticNodesLabel, lymphaticNodesList});
     }
 
+    // cуставы
     private void createJointsPanel() {
         jointsLabel = new JLabel("Состояние:");
         jointsList = createComboBox(JOINTS_LIST_ITEMS);
         jointsTypeLabel = new JLabel("Какие:");
         jointsTypeList = createComboBox(JOINTS_TYPE_LIST_ITEMS);
-        setEnabledJointsType(false);
+        setEnabledJointsType(false); // переименовать на disableJointsTypeList() ???
 
-        jointsList.addItemListener(e -> {
-            if (jointsList.getSelectedItem().equals("изменены")) {
-                setEnabledJointsType(true);
-            } else if (jointsList.getSelectedItem().equals("не изменены") ||
-                    jointsList.getSelectedIndex() == -1) {
-                setEnabledJointsType(false);
-            }
-        });
+        jointsList.addItemListener(e -> controller.jointsListItemSelected());
 
         jointsPanel = createPanel(jointsLabel, jointsList, jointsTypeList, jointsTypeLabel);
     }
 
-    private void setEnabledJointsType(boolean enabled) {
+    public void setEnabledJointsType(boolean enabled) {
         jointsTypeLabel.setEnabled(enabled);
         jointsTypeList.setEnabled(enabled);
         jointsTypeList.setSelectedItem(EMPTY_STRING);
@@ -353,13 +376,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         accentBox = createCheckBox("Акцент II т.");
         accentBox.setBackground(Color.GRAY);
 
-        accentBox.addChangeListener(e -> {
-            if (accentBox.isSelected()) {
-                accentList.setEnabled(true);
-            } else {
-                accentList.setEnabled(false);
-            }
-        });
+        accentBox.addChangeListener(e -> controller.accentCheckBoxChanged());
 
         accentPanel = createPanel(accentBox, accentList);
     }
@@ -378,13 +395,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         systolicNoiseLabel = new JLabel("на верхушке во II межреберье справа");
         systolicNoiseLabel.setEnabled(false);
 
-        systolicNoiseBox.addChangeListener(e -> {
-            if (systolicNoiseBox.isSelected()) {
-                systolicNoiseLabel.setEnabled(true);
-            } else {
-                systolicNoiseLabel.setEnabled(false);
-            }
-        });
+        systolicNoiseBox.addChangeListener(e -> controller.systolicNoiseCheckBoxChanged());
 
         systolicNoisePanel = createPanel(systolicNoiseBox, systolicNoiseLabel);
     }
@@ -394,13 +405,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         diastolicNoiseList = createComboBox(DIASTOLIC_NOISE_LIST_ITEMS);
         diastolicNoiseList.setEnabled(false);
 
-        diastolicNoiseBox.addChangeListener(e -> {
-            if (diastolicNoiseBox.isSelected()) {
-                diastolicNoiseList.setEnabled(true);
-            } else {
-                diastolicNoiseList.setEnabled(false);
-            }
-        });
+        diastolicNoiseBox.addChangeListener(e -> controller.diastolicNoiseCheckBoxChanged());
 
         diastolicNoisePanel = createPanel(diastolicNoiseBox, diastolicNoiseList);
     }
@@ -513,14 +518,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         palpationLabel = new JLabel("при пальпации:");
 
         palpationList = createComboBox(PALPATION_LIST_ITEMS);
-        palpationList.addItemListener(e -> {
-            if (palpationList.getSelectedItem().equals("безболезненный")) {
-                setWherePanelEnabled(false);
-                whereList.setSelectedIndex(-1);
-            } else {
-                setWherePanelEnabled(true);
-            }
-        });
+        palpationList.addItemListener(e -> controller.palpationListItemSelected());
 
         palpationPanel = createPanel(palpationLabel, palpationList);
     }
@@ -533,7 +531,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         wherePanel = createPanel(whereLabel, whereList);
     }
 
-    private void setWherePanelEnabled(boolean enabled) {
+    public void setWherePanelEnabled(boolean enabled) {
         whereLabel.setEnabled(enabled);
         whereList.setEnabled(enabled);
     }
@@ -551,28 +549,21 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         tonguePanel = createPanel(tongueLabel, tongueList);
     }
 
+    // печень
     private void createLiverPanel() {
         liverLabel = new JLabel("Состояние:");
         liverList = createComboBox(LIVER_LIST_ITEMS);
         createCmPanel();
         setCmPanelEnabled(false);
 
-        liverList.addItemListener(e -> {
-            if (liverList.getSelectedItem().equals("выступает из подреберья на")) {
-                setCmPanelEnabled(true);
-            } else if (liverList.getSelectedItem().equals("не пальпируется") ||
-                    liverList.getSelectedIndex() == -1) {
-                cmList.setSelectedIndex(-1);
-                setCmPanelEnabled(false);
-            }
-        });
+        liverList.addItemListener(e -> controller.liverListItemSelected());
 
         createEdgePanel();
 
         liverPanel = createPanel(liverLabel, liverList, cmPanel, edgePanel);
     }
 
-    private void setCmPanelEnabled(boolean enabled) {
+    public void setCmPanelEnabled(boolean enabled) {
         cmLabel.setEnabled(enabled);
         cmList.setEnabled(enabled);
     }
@@ -819,7 +810,6 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     }
 
     public JComboBox getPasternatskySymptomList() {
-
         return pasternatskySymptomList;
     }
 
@@ -835,21 +825,23 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JLabel examinationLabel;
     private JTextArea examinationArea;
     private JScrollPane examinationScrollPane;
-    private JButton examinationButton;
+    private JButton addExaminationButton;
     private JPanel examinationPanel;
 
     public JTextArea getExaminationArea() {
         return examinationArea;
     }
 
+    // обследование
     private void createExaminationPanel() {
         examinationLabel = new JLabel("Обследование");
         examinationArea = createTextArea();
         examinationScrollPane = new JScrollPane(examinationArea);
         examinationScrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
-        examinationButton = new JButton("Добавить");
-        examinationButton.addActionListener(event -> (new ExaminationDialog()).setVisible(true));
-        examinationPanel = createPanel(examinationLabel, examinationScrollPane, examinationButton);
+        addExaminationButton = new JButton("Добавить");
+        addExaminationButton.addActionListener(event -> controller.addExaminationButtonClicked());
+
+        examinationPanel = createPanel(examinationLabel, examinationScrollPane, addExaminationButton);
     }
 
     private JPanel healingPanel;
@@ -890,11 +882,12 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         this.therapyPreparationsDialog = therapyPreparationsDialog;
     }
 
+    // медикаментозная терапия - препараты
     private void createTherapyPreparationsPanel() {
         preparationsLabel = new JLabel("Препараты");
         therapyPreparationsArea = createTextArea();
         preparationsButton = new JButton("Добавить");
-        preparationsButton.addActionListener(event -> therapyPreparationsDialog.setVisible(true));
+        preparationsButton.addActionListener(event -> controller.addPreparationsButtonClicked());
 
         preparationsPanel = createPanel(preparationsLabel, createScrollPane(therapyPreparationsArea),
                 preparationsButton);
@@ -940,20 +933,16 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return urgentCarePreparationsArea;
     }
 
+    // неотложная помощь, переименовать кнопку
     private JButton urgentCareButton;
     private void createUrgentCarePanel() {
         preparationsLabel = new JLabel("Препараты");
         urgentCarePreparationsArea = createTextArea();
         urgentCareButton = new JButton("Добавить");
-        urgentCareButton.addActionListener(event -> urgentCarePreparationsDialog.setVisible(true));
+        urgentCareButton.addActionListener(event -> controller.addUrgentCarePreparationsButtonClicked());
 
         urgentCarePanel = createPanel(preparationsLabel, createScrollPane(urgentCarePreparationsArea),
                 urgentCareButton);
-    }
-
-    private ExaminationCreator creator;
-    public ExaminationCreator getCreator() {
-        return creator;
     }
 
     // почки
@@ -1005,10 +994,8 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     private void createButton() {
         createDocumentButton = new JButton("Создать документ");
-        createDocumentButton.addActionListener(e -> {
-            creator = new ExaminationCreator();
-            creator.createDocument();
-        });
+        createDocumentButton.addActionListener(e -> controller.createDocumentButtonClicked());
+
         add(createDocumentButton, new GridBagConstraints(2, 0, 1, 1, 0.9, 0.9, CENTER, NONE,
                 new Insets(1, 1, 1, 1), 0, 0));
 
@@ -1153,5 +1140,105 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         tabbedPane.addTab("Живот", commonStomachPanel);
         tabbedPane.addTab("Суставы", jointsPanel);
         tabbedPane.addTab("Печень", liverPanel);
+    }
+
+    public JCheckBox getAccentBox() {
+        return accentBox;
+    }
+
+    //1182 строк было в этом файле до написания этого класса-контроллера
+    private class ExaminationPanelController {
+
+        // обработчик нажатия кнопки "Добавить" в области "Жалобы"
+        private void addComplaintsButtonClicked() {
+            ComplaintsDialog complaintsDialog = new ComplaintsDialog();
+            complaintsDialog.setVisible(true);
+        }
+
+        // обработчик выбора элемента в выпадающем списке "Суставы"
+        private void jointsListItemSelected() {
+            if (jointsList.getSelectedItem().equals("изменены")) {
+                setEnabledJointsType(true);
+            } else if (jointsList.getSelectedItem().equals("не изменены") ||
+                    jointsList.getSelectedIndex() == -1) {
+                jointsTypeList.setSelectedIndex(-1);
+                setEnabledJointsType(false); // че за ебаное название метода ???
+            }
+        }
+
+        // обработчик установки/сброса чекбокса с текстом "Акцент II т."
+        private void accentCheckBoxChanged() {
+            if (accentBox.isSelected()) {
+                accentList.setEnabled(true);
+            } else {
+                accentList.setEnabled(false);
+                accentList.setSelectedIndex(-1);
+            }
+        }
+
+        // обработчик установки/сброса чекбокса с текстом "систолический:"
+        private void systolicNoiseCheckBoxChanged() {
+            systolicNoiseLabel.setEnabled(systolicNoiseBox.isSelected());
+        }
+
+        // обработчик установки/сброса чекбокса с текстом "диастолический:"
+        private void diastolicNoiseCheckBoxChanged() {
+            if (diastolicNoiseBox.isSelected()) {
+                diastolicNoiseList.setEnabled(true);
+            } else {
+                diastolicNoiseList.setEnabled(false);
+                diastolicNoiseList.setSelectedIndex(-1);
+            }
+
+            // diastolicNoiseList.setEnabled(diastolicNoiseBox.isSelected());
+        }
+
+        // обработчик выбора элемента в выпадающем списке "при пальпации"
+        private void palpationListItemSelected() {
+            if (palpationList.getSelectedItem().equals("безболезненный")) {
+                setWherePanelEnabled(false);
+                whereList.setSelectedIndex(-1);
+            } else {
+                setWherePanelEnabled(true);
+            }
+        }
+
+        // обработчик выбора элемента в выпадающем списке "Состояние" в панели "Печень"
+        private void liverListItemSelected() {
+            if (liverList.getSelectedItem().equals("выступает из подреберья на")) {
+                setCmPanelEnabled(true);
+            } else if (liverList.getSelectedItem().equals("не пальпируется") ||
+                    liverList.getSelectedIndex() == -1) {
+                cmList.setSelectedIndex(-1);
+                setCmPanelEnabled(false);
+            }
+        }
+
+        // обработчик нажатия кнопки "Добавить" в панели "Обследование"
+        private void addExaminationButtonClicked() {
+            ExaminationDialog examinationDialog = new ExaminationDialog();
+            examinationDialog.setVisible(true);
+        }
+
+        // переименовать кнопку на addPreparationsButton или как-то так
+        // обработчик нажатия кнопки "Добавить" в панели "Медикаментозная терапия"
+        private void addPreparationsButtonClicked() {
+            therapyPreparationsDialog.setVisible(true);
+        }
+
+        // здесь тоже если есть текст в TextArea, то при повторном добавлении новый текст замещает
+        // имеющийся, а не добавляется к нему
+
+        // обработчик нажатия кнопки "Добавить" в панели "Неотложная помощь"
+        private void addUrgentCarePreparationsButtonClicked() {
+            urgentCarePreparationsDialog.setVisible(true);
+        }
+
+        // обработчик нажатия кнопки "Добавить" в панели "Неотложная помощь"
+        private void createDocumentButtonClicked() {
+            ExaminationCreator creator = new ExaminationCreator();
+            creator.createDocument();
+        }
+
     }
 }

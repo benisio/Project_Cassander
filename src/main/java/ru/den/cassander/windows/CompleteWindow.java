@@ -11,20 +11,23 @@ import static ru.den.cassander.Utilities.*;
 
 /**
  * Created on 07.08.2015.
+ * Updated on January 2023
  *
  * @author Denis Vereshchagin
  */
 
 public class CompleteWindow extends AbstractWindow {
 
-    // TODO добавить кнопку "Открыть расположение документа"
     // TODO переписать CompleteWindow с использованием JOptionPane и поправить кнопку Открыть
 
     private String destinationFilePath;
+    private CompleteWindowController controller;
 
     public CompleteWindow(String destinationFilePath) {
         super("Готово!", 650, 200, DISPOSE_ON_CLOSE);
         this.destinationFilePath = destinationFilePath;
+
+        controller = new CompleteWindowController();
 
         createLabel();
         createOKButton();
@@ -57,20 +60,10 @@ public class CompleteWindow extends AbstractWindow {
                 EAST, NONE, new Insets(0, 3, 5, 5), 20, 0));
     }
 
-    // since 2.1
+    // создает кнопку "Открыть"
     private void createOpenButton() {
         openButton = new JButton("Открыть");
-
-        openButton.addActionListener(e -> {
-            try {
-                System.out.println(destinationFilePath);
-                Desktop.getDesktop().open(new File(destinationFilePath)); // запуск приложения ОС (здесь - ворд)
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            });
-
+        openButton.addActionListener(e -> controller.openButtonClicked());
         panel.add(openButton, new GridBagConstraints(2, 1, 1, 1, 0.9, 0.9,
                 EAST, NONE, new Insets(0, 3, 5, 5 ), 20, 0));
     }
@@ -78,8 +71,31 @@ public class CompleteWindow extends AbstractWindow {
     // создает кнопку "Открыть расположение файла"
     private void createOpenFileLocationButton() {
         openFileLocationButton = new JButton("Открыть расположение файла");
+        openFileLocationButton.addActionListener(e -> controller.openFileLocationButtonClicked());
+        panel.add(openFileLocationButton, new GridBagConstraints(3, 1, 1, 1, 0.9, 0.9,
+                EAST, NONE, new Insets(0, 3, 5, 5 ), 20, 0));
+    }
 
-        openFileLocationButton.addActionListener(e -> {
+    /**
+     * Created on January 2023
+     * Класс-обработчик событий окна "Готово!"
+     *
+     * @author Denis Vereshchagin
+     */
+    private class CompleteWindowController {
+
+        // обработчик нажатия кнопки "Открыть"
+        private void openButtonClicked() {
+            try {
+                System.out.println(destinationFilePath);
+                Desktop.getDesktop().open(new File(destinationFilePath)); // запуск приложения ОС (здесь - ворд)
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // обработчик нажатия кнопки "Открыть расположение файла"
+        private void openFileLocationButtonClicked() {
             try {
                 String documentLocation = new File(destinationFilePath).getParent();
                 System.out.println("createOpenFileLocationButton()");
@@ -88,9 +104,6 @@ public class CompleteWindow extends AbstractWindow {
             } catch (IOException ex) {
                 throw new RuntimeException("Исключение в методе createOpenFileLocationButton() класса CompleteWindow", ex);
             }
-        });
-
-        panel.add(openFileLocationButton, new GridBagConstraints(3, 1, 1, 1, 0.9, 0.9,
-                EAST, NONE, new Insets(0, 3, 5, 5 ), 20, 0));
+        }
     }
 }

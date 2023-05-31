@@ -1,4 +1,4 @@
-package ru.den.cassander.windows.main;
+package ru.den.cassander.gui.main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import ru.den.cassander.document_creators.PatronageCreator;
-import ru.den.cassander.windows.CompleteWindow;
+import ru.den.cassander.gui.CompleteWindow;
 
 import static java.awt.GridBagConstraints.*;
 import static ru.den.cassander.Constants.*;
@@ -14,9 +14,8 @@ import static ru.den.cassander.Constants.*;
 /**
  * Created on 11.09.2015.
  * Updated on January 2023
- * Класс, создающий GUI для раздела "Патронаж"
  *
- * @author Denis Vereshchagin
+ * Класс, создающий GUI для раздела "Патронаж"
  */
 public class PatronagePanel extends AbstractPanel {
 

@@ -1,4 +1,4 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,12 +7,10 @@ import java.util.*;
 
 import static ru.den.cassander.Main.getMainWindow;
 import static ru.den.cassander.Constants.EMPTY_STRING;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.*;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.*;
 
 /**
  * Created on 01.10.2015.
- *
- * @author Denis Vereshchagin
  */
 
 public class TherapyPreparationsDialog extends AbstractDialog {
@@ -91,7 +89,6 @@ public class TherapyPreparationsDialog extends AbstractDialog {
         label.setPreferredSize(new Dimension(50, 25));
         label.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         peridiocityBox.add(label);
-        //peridiocityBox.add(new JLabel(convertToMultiline("Периодичность\nприменения")));
 
         for (byte i = 0; i < peridiocityLists.length; i++) {
             peridiocityLists[i] = createComboBox(PERIODICITY_LIST_ITEMS);
@@ -170,8 +167,6 @@ public class TherapyPreparationsDialog extends AbstractDialog {
     private boolean isEmpty(JTextField field) {
         return field.getText().equals(EMPTY_STRING);
     }
-
-    // TODO сделать что-то с методом static String convertToMultiline(String orig), который находится уже в трех классах
 
     // EVENT HANDLERS
 

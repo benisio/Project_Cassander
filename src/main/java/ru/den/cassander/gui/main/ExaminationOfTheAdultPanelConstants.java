@@ -1,4 +1,4 @@
-package ru.den.cassander.windows.main;
+package ru.den.cassander.gui.main;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -7,8 +7,6 @@ import static ru.den.cassander.Utilities.*;
 
 /**
  * Created on 26.09.2015.
- *
- * @author Denis Vereshchagin
  */
 
 // TODO забить все эти константы в XML ?
@@ -19,8 +17,7 @@ public final class ExaminationOfTheAdultPanelConstants {
     }
 
     public static final String[] ACCENT_LIST_ITEMS = new String[] {
-            "на аорте",
-            "на легочной артерии"
+            "на аорте", "на легочной артерии"
     };
 
     public static final String[] SKIN_LIST_ITEMS = new String[] {
@@ -39,9 +36,7 @@ public final class ExaminationOfTheAdultPanelConstants {
     };
 
     public static final String[] JOINTS_TYPE_LIST_ITEMS = new String[] {
-            "коленные",
-            "локтевые",
-            "тазобедренные"
+            "коленные", "локтевые", "тазобедренные"
     };
 
     public static final String[] MOUTH_LIST_ITEMS = new String[] {
@@ -52,13 +47,10 @@ public final class ExaminationOfTheAdultPanelConstants {
     };
 
     public static final String[] TONSILS_LIST_ITEMS = new String[] {
-            "обычные",
-            "рыхлые",
-            "увеличены",
-            "уменьшены"
+            "обычные", "рыхлые", "увеличены", "уменьшены"
     };
 
-    public static final String[] BREATHING_LIST_ITEMS = new String[] {
+    public static final String[] BREATHING_TYPE_LIST_ITEMS = new String[] {
             "везикулярное",
             "жесткое",
             "ослабленное везикулярное",
@@ -121,44 +113,31 @@ public final class ExaminationOfTheAdultPanelConstants {
     };
 
     public static final String[] MUSCLE_PROTECTION_LIST_ITEMS = new String[] {
-            "отсутствует",
-            "слабо выражена",
-            "дефанс"
+            "отсутствует", "слабо выражена", "дефанс"
     };
 
     public static final String[] TONGUE_LIST_ITEMS = new String[] {
-            "чистый",
-            "влажный",
-            "обложен белым налетом",
-            "обложен желтовато-белым налетом"
+            "чистый", "влажный", "обложен белым налетом", "обложен желтовато-белым налетом"
     };
 
     public static final String[] LIVER_LIST_ITEMS = new String[] {
-            "не пальпируется",
-            "выступает из подреберья на"
+            "не пальпируется", "выступает из подреберья на"
     };
 
     public static final String[] EDGE_LIST_ITEMS = new String[] {
-            "уплотненный",
-            "безболезненный",
-            "болезненный"
+            "уплотненный", "безболезненный", "болезненный"
     };
 
     public static final String[] BM_LIST_ITEMS = new String[] {
-            "нормальный",
-            "неустойчивый"
+            "нормальный", "неустойчивый"
     };
 
     public static final String[] CONSTIPATION_LIST_ITEMS = new String[] {
-            "спастические",
-            "атонические",
-            "отсутствуют"
+            "спастические", "атонические", "отсутствуют"
     };
 
     public static final String[] URINATION_LIST_ITEMS = new String[] {
-            "нормальное",
-            "болезненное",
-            "учащенное"
+            "нормальное", "болезненное", "учащенное"
     };
 
     public static final String[] EDEMAS_LIST_ITEMS = new String[] {
@@ -341,22 +320,11 @@ public final class ExaminationOfTheAdultPanelConstants {
     };
 
     public static final String[] THERAPY_METHODS_LIST_ITEMS = new String[] {
-            "до еды",
-            "после еды",
-            "во время еды",
-            "препарат разжевывать",
-            "препарат не разжевывать"
+            "до еды", "после еды", "во время еды", "препарат разжевывать", "препарат не разжевывать"
     };
 
     public static final String[] URGENT_CARE_METHODS_LIST_ITEMS = new String[] {
-            "per os",
-            "п/к",
-            "в/м",
-            "в/в струйно",
-            "в/в кап",
-            "КПВ",
-            "ВВЛ",
-            "ПРК"
+            "per os", "п/к", "в/м", "в/в струйно", "в/в кап", "КПВ", "ВВЛ", "ПРК"
     };
 
     // препараты для неотложки
@@ -504,7 +472,7 @@ public final class ExaminationOfTheAdultPanelConstants {
     };
 
     public static final String[] AUXILIARY_LIST_ITEMS        = numbersToStringArray(getNumbersInRange(0,  250, 10 ));
-    public static final String[] BREATHING_NUMBER_LIST_ITEMS = numbersToStringArray(getNumbersInRange(20, 60,  2  ));
+    public static final String[] BREATHING_AMOUNT_LIST_ITEMS = numbersToStringArray(getNumbersInRange(20, 60,  2  ));
     public static final String[] PULSE_LIST_ITEMS            = numbersToStringArray(getNumbersInRange(30, 180, 4  ));
     public static final String[] CM_LIST_ITEMS               = numbersToStringArray(getNumbersInRange(1,  12,  0.5));
     public static final String[] RIGHT_HAND_LIST1_ITEMS               = numbersToStringArray(getNumbersInRange(0,  250,  10));

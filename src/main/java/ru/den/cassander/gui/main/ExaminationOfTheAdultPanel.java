@@ -1,27 +1,25 @@
-package ru.den.cassander.windows.main;
+package ru.den.cassander.gui.main;
 
 import ru.den.cassander.document_creators.ExaminationCreator;
-import ru.den.cassander.windows.ComplaintsDialog;
-import ru.den.cassander.windows.ExaminationDialog;
-import ru.den.cassander.windows.TherapyPreparationsDialog;
-import ru.den.cassander.windows.UrgentCarePreparationsDialog;
+import ru.den.cassander.gui.ComplaintsDialog;
+import ru.den.cassander.gui.ExaminationDialog;
+import ru.den.cassander.gui.TherapyPreparationsDialog;
+import ru.den.cassander.gui.UrgentCarePreparationsDialog;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Vector;
 
 import static java.awt.GridBagConstraints.*;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 import static ru.den.cassander.Constants.*;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.*;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.*;
 
 /**
  * Created on 13.09.2015.
  * Класс, создающий GUI для раздела "Осмотр взрослого"
- *
- * @author Denis Vereshchagin
  */
 /*
  * TODO еще баг
@@ -58,63 +56,25 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     private JButton createDocumentButton;
 
-    private JLabel dateLabel;
-    private JLabel complaintsLabel;
-    private JLabel anamnesisLabel;
-    private JLabel skinLabel;
-    private JLabel lymphaticNodesLabel;
-    private JLabel jointsLabel;
     private JLabel jointsTypeLabel;
-    private JLabel mouthLabel;
-    private JLabel tonsilsLabel;
-    private JLabel lungsLabel;
-    private JLabel breathingLabel;
-    private JLabel ralesLabel;
-    private JLabel breathingNumberLabel;
-    private JLabel breathingMinuteLabel;
-    private JLabel heartTonesLabel;
     private JLabel systolicNoiseLabel;
-    private JLabel rightHandLabel;
-    private JLabel leftHandLabel;
-    private JLabel slashLabel;
-    private JLabel millimetresLabel;
-    private JLabel pulseLabel;
-    private JLabel minutesLabel;
-    private JLabel pulseFeaturesLabel;
-    private JLabel fillingLabel;
-    private JLabel tensionLabel;
-    private JLabel tongueLabel;
-    private JLabel stomachLabel;
-    private JLabel palpationLabel;
-    private JLabel muscleProtectionLabel;
-    private JLabel liverLabel;
-    private JLabel edgeLabel;
+    private JLabel slashLabel; // что это за метка ? с текстом "/" ?
     private JLabel bMLabel; // стул
-    private JLabel constipationLabel; // запоры
-    private JLabel urinationLabel; // мочеиспускание
-    private JLabel edemasLabel; // отеки
-    private JLabel modeLabel;
-
-    //private JTextField dateField;
 
     private JTextArea complaintsArea;
     private JTextArea anamnesisArea;
 
-    private JScrollPane complaintsScrollPane;
-    private JScrollPane anamnesisScrollPane;
-
     private JComboBox skinList;
     private JComboBox lymphaticNodesList;
-    private JComboBox jointsList;
+    private JComboBox jointsList; // суставы
     private JComboBox jointsTypeList;
     private JComboBox mouthList;
     private JComboBox tonsilsList;
     private JComboBox breathingList;
     private JComboBox ralesList;
-    private JComboBox breathingNumberList;
+    private JComboBox breathingAmountList;
     private JComboBox heartTonesList;
     private JComboBox accentList;
-    private JComboBox systolicNoiseList;
     private JComboBox diastolicNoiseList;
     private JComboBox rightHandList1;
     private JComboBox rightHandList2;
@@ -166,8 +126,8 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JPanel tonsilsPanel;
     private JPanel lungsPanel;
     private JPanel ralesPanel;
+    private JPanel breathingAmountPanel;
     private JPanel breathingPanel;
-    private JPanel commonBreathingPanel;
     private JPanel heartTonesPanel;
     private JPanel heartPanel;
     private JPanel accentPanel;
@@ -198,44 +158,45 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     public ExaminationOfTheAdultPanel() {
         super();
 
-        controller = new ExaminationPanelController();
+        controller = new ExaminationPanelController(); // 2 мс
 
         /* для отдельного класса-контроллера
         controller.setExaminationPanel(this);*/
 
-        createDatePanel();
-        createComplaintsPanel();
-        createAnamnesisPanel();
-        createSkinPanel();
-        createLymphaticNodesPanel();
-        createJointsPanel();
-        createMouthPanel();
-        createTonsilsPanel();
-        createCommonBreathingPanel();
-        createHeartPanel();
-        createCommonNoisePanel();
-        createArterialPressurePanel();
-        createPulsePanel();
-        createCommonStomachPanel();
-        createTonguePanel();
-        createLiverPanel();
-        createBMPanel();
-        createConstipationsPanel();
-        createUrinationPanel();
-        createEdemasPanel();
-        createModePanel();
-        createDiagnosisPanel();
-        createExaminationTypePanel();
-        createExaminationPanel();
-        createHealingPanel();
+        // создаем GUI
+        createDatePanel(); // 23 мс
+        createComplaintsPanel(); // 18 мс
+        createAnamnesisPanel(); // 5 мс
+        createSkinPanel(); // 11 мс
+        createLymphaticNodesPanel(); // 8 мс
+        createJointsPanel(); // 18 мс
+        createMouthPanel(); // 21 мс
+        createTonsilsPanel(); // 34 мс
+        createBreathingPanel(); // 32 мс
+        createHeartPanel(); // 18 мс
+        createHeartNoisePanel(); // 13 мс
+        createArterialPressurePanel(); // 28 мс
+        createPulsePanel(); // 27 мс
+        createCommonStomachPanel(); // 27 мс
+        createTonguePanel(); // 7 мс
+        createLiverPanel(); // 22 мс
+        createBMPanel(); // 6 мс
+        createConstipationsPanel(); // 6 мс
+        createUrinationPanel(); // 6 мс
+        createEdemasPanel(); // 8 мс
+        createCareTypePanel(); // 6 мс
+        createDiagnosisPanel(); // 2 мс
+        createExaminationTypePanel(); // 6 мс
+        createExaminationPanel(); // 5 мс
+        createHealingPanel(); // 289 мс
 
-        createKidneysGeneralPanel();
+        createKidneysGeneralPanel(); // 28 мс
 
-        createPanelBox();
-        createTabbedPane();
+        createPanelBox(); // 1 мс
+        createTabbedPane(); // 2 мс
 
-        addAllPanels();
-        createButton();
+        addAllPanels(); // 1 мс
+        createButton(); // 1 мс
     }
 
     public JTextArea getComplaintsArea() {
@@ -246,8 +207,9 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return anamnesisArea;
     }
 
+    // создает панель "Дата"
     private void createDatePanel() {
-        dateLabel = new JLabel(DATE);
+        var dateLabel = new JLabel(DATE);
         dateField = new JTextField(10);
         fillTheDateField();
 
@@ -261,170 +223,176 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     // Панель "Жалобы"
     private JButton addComplaintsButton;
     private void createComplaintsPanel() {
-        complaintsLabel = new JLabel(COMPLAINTS);
+        JLabel complaintsLabel = new JLabel(COMPLAINTS);
         complaintsArea = createTextArea();
-        complaintsScrollPane = createScrollPane(complaintsArea);
+        JScrollPane complaintsScrollPane = createScrollPane(complaintsArea);
         addComplaintsButton = new JButton("Добавить");
         addComplaintsButton.addActionListener(event -> controller.addComplaintsButtonClicked());
         complaintsPanel = createPanel(complaintsLabel, complaintsScrollPane, addComplaintsButton);
     }
 
+    // создает панель "Анамнез"
     private void createAnamnesisPanel() {
-        anamnesisLabel = new JLabel("Анамнез:");
+        JLabel anamnesisLabel = new JLabel("Анамнез:");
         anamnesisArea = createTextArea();
-        anamnesisScrollPane = createScrollPane(anamnesisArea);
+        JScrollPane anamnesisScrollPane = createScrollPane(anamnesisArea);
         anamnesisPanel = createPanel(anamnesisLabel, anamnesisScrollPane);
     }
 
+    // создает панель "Кожные покровы"
     private void createSkinPanel() {
-        skinLabel = new JLabel("Кожные покровы:");
+        JLabel skinLabel = new JLabel("Кожные покровы:");
         skinList = createComboBox(SKIN_LIST_ITEMS);
         skinList.setPreferredSize(new Dimension(PREF_WIDTH_1, PREF_HEIGHT));
         skinPanel = createPanel(new Component[]{skinLabel, skinList});
     }
 
+    // создает панель "Лимфатические узлы"
     private void createLymphaticNodesPanel() {
-        lymphaticNodesLabel = new JLabel("Лимфатические узлы:");
+        JLabel lymphaticNodesLabel = new JLabel("Лимфатические узлы:");
         lymphaticNodesList = createComboBox(LYMPHATIC_NODES_LIST_ITEMS);
         lymphaticNodesList.setPreferredSize(new Dimension(PREF_WIDTH_1, PREF_HEIGHT));
         lymphaticNodesPanel = createPanel(new Component[]{lymphaticNodesLabel, lymphaticNodesList});
     }
 
-    // cуставы
+    // создает панель "Cуставы"
     private void createJointsPanel() {
-        jointsLabel = new JLabel("Состояние:");
+        JLabel jointsLabel = new JLabel("Состояние:");
         jointsList = createComboBox(JOINTS_LIST_ITEMS);
         jointsTypeLabel = new JLabel("Какие:");
         jointsTypeList = createComboBox(JOINTS_TYPE_LIST_ITEMS);
-        setEnabledJointsType(false); // переименовать на disableJointsTypeList() ???
-
+        setEnabledJointsTypePanel(false); // переименовать на disableJointsTypeList() ???
         jointsList.addItemListener(e -> controller.jointsListItemSelected());
-
         jointsPanel = createPanel(jointsLabel, jointsList, jointsTypeList, jointsTypeLabel);
     }
 
-    public void setEnabledJointsType(boolean enabled) {
+    // блокирует/разблокировывает панель "какие" в "суставах"
+    public void setEnabledJointsTypePanel(boolean enabled) {
         jointsTypeLabel.setEnabled(enabled);
         jointsTypeList.setEnabled(enabled);
-        jointsTypeList.setSelectedItem(EMPTY_STRING);
+        jointsTypeList.setSelectedItem(EMPTY_STRING); // что я тут хочу сделать? может лучше юзать setSelectedIndex(-1)?
     }
 
+    // создает панель "Зев"
     private void createMouthPanel() {
-        mouthLabel = new JLabel("Зев:");
+        var mouthLabel = new JLabel("Зев:");
         mouthList = createComboBox(MOUTH_LIST_ITEMS);
         mouthList.setPreferredSize(new Dimension(PREF_WIDTH_1, PREF_HEIGHT));
         mouthPanel = createPanel(new Component[]{mouthLabel, mouthList});
     }
 
+    // создает панель "Миндалины"
     private void createTonsilsPanel() {
-        tonsilsLabel = new JLabel("Миндалины:");
+        JLabel tonsilsLabel = new JLabel("Миндалины:");
         tonsilsList = createComboBox(TONSILS_LIST_ITEMS);
         tonsilsList.setPreferredSize(new Dimension(PREF_WIDTH_1, PREF_HEIGHT));
         tonsilsPanel = createPanel(new Component[]{tonsilsLabel, tonsilsList});
     }
 
-    private void createLungsPanel() {
-        lungsLabel = new JLabel("В лёгких выслушивается");
-        breathingLabel = new JLabel("дыхание");
-        breathingList = createComboBox(BREATHING_LIST_ITEMS);
+    // создает панель "Тип дыхания" ("В легких выслушивается *такое-то* дыхание")
+    private void createBreathingTypePanel() {
+        var lungsLabel = new JLabel("В лёгких выслушивается");
+        var breathingLabel = new JLabel("дыхание");
+        breathingList = createComboBox(BREATHING_TYPE_LIST_ITEMS);
 
         lungsPanel = createPanel(lungsLabel, breathingList, breathingLabel);
     }
 
+    // создает панель "Хрипы"
     private void createRalesPanel() {
-        ralesLabel = new JLabel("Хрипы:");
+        var ralesLabel = new JLabel("Хрипы:");
         ralesList = createComboBox(RALES_LIST_ITEMS);
 
         ralesPanel = createPanel(new Component[]{ralesLabel, ralesList});
     }
 
+    // создает панель "Число дыханий"
+    private void createBreathingAmountPanel() {
+        var breathingAmountLabel = new JLabel("Число дыханий");
+        var breathingMinuteLabel = new JLabel("в мин.");
+        breathingAmountList = createComboBox(BREATHING_AMOUNT_LIST_ITEMS);
+
+        breathingAmountPanel = createPanel(breathingAmountLabel, breathingAmountList, breathingMinuteLabel);
+    }
+
+    // создает панель "Дыхание"
     private void createBreathingPanel() {
-        breathingNumberList = createComboBox(BREATHING_NUMBER_LIST_ITEMS);
-
-        breathingNumberLabel = new JLabel("Число дыханий");
-        breathingMinuteLabel = new JLabel("в мин.");
-        breathingPanel = createPanel(breathingNumberLabel, breathingNumberList, breathingMinuteLabel);
-    }
-
-    private void createCommonBreathingPanel() {
-        createLungsPanel();
+        createBreathingTypePanel();
         createRalesPanel();
-        createBreathingPanel();
+        createBreathingAmountPanel();
 
-        commonBreathingPanel = createPanel(lungsPanel, ralesPanel, breathingPanel);
-        //commonBreathingPanel.setBorder(new TitledBorder("Дыхание"));
+        breathingPanel = createPanel(lungsPanel, ralesPanel, breathingAmountPanel);
     }
 
+    // создает панель "Сердце"
     private void createHeartPanel() {
-        createTonesPanel();
+        createHeartTonesPanel();
         createAccentPanel();
 
         heartPanel = createPanel(heartTonesPanel, accentPanel);
-        //heartPanel.setBorder(new TitledBorder("Сердце"));
     }
 
-    private void createTonesPanel() {
-        heartTonesLabel = new JLabel("Тоны сердца:");
+    // создает панель "Тоны сердца"
+    private void createHeartTonesPanel() {
+        var heartTonesLabel = new JLabel("Тоны сердца:");
         heartTonesList = createComboBox(HEART_TONES_LIST_ITEMS);
 
         heartTonesPanel = createPanel(new Component[]{heartTonesLabel, heartTonesList});
     }
 
+    // создает панель "Акцент II т."
     private void createAccentPanel() {
         accentList = createComboBox(ACCENT_LIST_ITEMS);
         accentList.setEnabled(false);
         accentBox = createCheckBox("Акцент II т.");
         accentBox.setBackground(Color.GRAY);
-
         accentBox.addChangeListener(e -> controller.accentCheckBoxChanged());
-
         accentPanel = createPanel(accentBox, accentList);
     }
 
-    private void createCommonNoisePanel() {
+    // создает панель "Шумы"
+    private void createHeartNoisePanel() {
         createSystolicNoisePanel();
         createDiastolicNoisePanel();
         createTonesOnTopPanel();
 
         commonNoisePanel = createPanel(systolicNoisePanel, diastolicNoisePanel, tonesOnTopPanel);
-        //commonNoisePanel.setBorder(new TitledBorder("Шумы"));
     }
 
+    // создает панель "Систолические шумы"
     private void createSystolicNoisePanel() {
         systolicNoiseBox = createCheckBox("систолический:");
         systolicNoiseLabel = new JLabel("на верхушке во II межреберье справа");
         systolicNoiseLabel.setEnabled(false);
-
         systolicNoiseBox.addChangeListener(e -> controller.systolicNoiseCheckBoxChanged());
-
         systolicNoisePanel = createPanel(systolicNoiseBox, systolicNoiseLabel);
     }
 
+    // создает панель "Диастолические шумы"
     private void createDiastolicNoisePanel() {
         diastolicNoiseBox = createCheckBox("диастолический:");
         diastolicNoiseList = createComboBox(DIASTOLIC_NOISE_LIST_ITEMS);
         diastolicNoiseList.setEnabled(false);
-
         diastolicNoiseBox.addChangeListener(e -> controller.diastolicNoiseCheckBoxChanged());
-
         diastolicNoisePanel = createPanel(diastolicNoiseBox, diastolicNoiseList);
     }
 
+    // создает панель "III и IV тоны на верхушке"
     private void createTonesOnTopPanel() {
-        tonesOnTopBox = createCheckBox("III и IV  тоны на верхушке");
+        tonesOnTopBox = createCheckBox("III и IV тоны на верхушке");
         tonesOnTopPanel = createPanel(tonesOnTopBox);
     }
 
+    // создает панель "А/Д"
     private void createArterialPressurePanel() {
         createRightHandPanel();
         createLeftHandPanel();
 
         arterialPressurePanel = createPanel(rightHandPanel, leftHandPanel);
-        //arterialPressurePanel.setBorder(new TitledBorder("АД"));
     }
 
     private void createRightHandPanel() {
-        rightHandLabel = new JLabel("на правой руке:");
+        var rightHandLabel = new JLabel("на правой руке:");
         rightHandList1 = createComboBox(RIGHT_HAND_LIST1_ITEMS);
         rightHandList2 = createComboBox(RIGHT_HAND_LIST2_ITEMS);
         rightHandAuxiliaryPanel = createAuxiliaryPanel(rightHandList1, slashLabel, rightHandList2);
@@ -432,7 +400,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     }
 
     private void createLeftHandPanel() {
-        leftHandLabel = new JLabel("на левой руке:");
+        var leftHandLabel = new JLabel("на левой руке:");
         leftHandList1 = createComboBox(LEFT_HAND_LIST1_ITEMS);
         leftHandList2 = createComboBox(LEFT_HAND_LIST2_ITEMS);
         leftHandAuxiliaryPanel = createAuxiliaryPanel(leftHandList1, slashLabel, leftHandList2);
@@ -441,8 +409,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     // TODO warning
     private JPanel createAuxiliaryPanel(JComboBox list1, JLabel label, JComboBox list2) {
-
-        JPanel panel = new JPanel(new FlowLayout());
+        var panel = new JPanel(new FlowLayout());
         panel.setBackground(Color.GRAY);
         list1.setPreferredSize(new Dimension(60, PREF_HEIGHT));
         label = new JLabel(" / ");
@@ -464,33 +431,32 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         createTensionPanel();
 
         pulsePanel = createPanel(pulseFrequencyPanel, pulseFeaturesPanel, fillingPanel, tensionPanel);
-        //pulsePanel.setBorder(new TitledBorder("Пульс"));
     }
 
     private void createPulseFrequencyPanel() {
-        pulseLabel = new JLabel("Частота:");
+        var pulseLabel = new JLabel("Частота:");
         pulseList = createComboBox(PULSE_LIST_ITEMS);
         pulseList.setPreferredSize(new Dimension(60, PREF_HEIGHT));
 
-        minutesLabel = new JLabel("ударов в мин.");
+        var minutesLabel = new JLabel("ударов в мин.");
 
         pulseFrequencyPanel = createPanel(pulseLabel, pulseList, minutesLabel);
     }
 
     private void createPulseFeaturesPanel() {
-        pulseFeaturesLabel = new JLabel("Хар-ки пульса:");
+        var pulseFeaturesLabel = new JLabel("Хар-ки пульса:");
         pulseFeaturesList = createComboBox(PULSE_FEATURES_LIST_ITEMS);
         pulseFeaturesPanel = createPanel(new Component[]{pulseFeaturesLabel, pulseFeaturesList});
     }
 
     private void createFillingPanel() {
-        fillingLabel = new JLabel("Наполнения:");
+        var fillingLabel = new JLabel("Наполнения:");
         fillingList = createComboBox(FILLING_LIST_ITEMS);
         fillingPanel = createPanel(fillingLabel, fillingList);
     }
 
     private void createTensionPanel() {
-        tensionLabel = new JLabel("Напряжения:");
+        var tensionLabel = new JLabel("Напряжения:");
         tensionList = createComboBox(TENSION_LIST_ITEMS);
         tensionPanel = createPanel(tensionLabel, tensionList);
     }
@@ -503,11 +469,10 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         createMuscleProtectionPanel();
 
         commonStomachPanel = createPanel(stomachPanel, palpationPanel, wherePanel, muscleProtectionPanel);
-        //commonStomachPanel.setBorder(new TitledBorder("Живот"));
     }
 
     private void createStomachPanel() {
-        stomachLabel = new JLabel("Состояние:");
+        var stomachLabel = new JLabel("Состояние:");
         stomachList = createComboBox(STOMACH_LIST_ITEMS);
         stomachPanel = createPanel(stomachLabel, stomachList);
     }
@@ -515,7 +480,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JLabel whereLabel;
     private JPanel palpationPanel;
     private void createPalpationPanel() {
-        palpationLabel = new JLabel("при пальпации:");
+        var palpationLabel = new JLabel("при пальпации:");
 
         palpationList = createComboBox(PALPATION_LIST_ITEMS);
         palpationList.addItemListener(e -> controller.palpationListItemSelected());
@@ -537,13 +502,13 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     }
 
     private void createMuscleProtectionPanel() {
-        muscleProtectionLabel = new JLabel("Мышечная защита:");
+        var muscleProtectionLabel = new JLabel("Мышечная защита:");
         muscleProtectionList = createComboBox(MUSCLE_PROTECTION_LIST_ITEMS);
         muscleProtectionPanel = createPanel(muscleProtectionLabel, muscleProtectionList);
     }
 
     private void createTonguePanel() {
-        tongueLabel = new JLabel("Язык:");
+        var tongueLabel = new JLabel("Язык:");
         tongueList = createComboBox(TONGUE_LIST_ITEMS);
 
         tonguePanel = createPanel(tongueLabel, tongueList);
@@ -551,7 +516,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     // печень
     private void createLiverPanel() {
-        liverLabel = new JLabel("Состояние:");
+        var liverLabel = new JLabel("Состояние:");
         liverList = createComboBox(LIVER_LIST_ITEMS);
         createCmPanel();
         setCmPanelEnabled(false);
@@ -584,7 +549,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     private JPanel edgePanel;
     private void createEdgePanel() {
-        edgeLabel = new JLabel("Край:");
+        var edgeLabel = new JLabel("Край:");
         edgeList = createComboBox(EDGE_LIST_ITEMS);
 
         edgePanel = createPanel(edgeLabel, edgeList);
@@ -599,47 +564,50 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     }
 
     private void createConstipationsPanel() {
-        constipationLabel = new JLabel("Запоры:");
+        // запоры
+        var constipationLabel = new JLabel("Запоры:");
         constipationList = createComboBox(CONSTIPATION_LIST_ITEMS);
         constipationList.setPreferredSize(new Dimension(PREF_WIDTH2, PREF_HEIGHT));
         constipationPanel = createPanel(constipationLabel, constipationList);
     }
 
     private void createUrinationPanel() {
-        urinationLabel = new JLabel("Мочеиспускание:");
+        // мочеиспускание
+        var urinationLabel = new JLabel("Мочеиспускание:");
         urinationList = createComboBox(URINATION_LIST_ITEMS);
         urinationList.setPreferredSize(new Dimension(PREF_WIDTH2, PREF_HEIGHT));
         urinationPanel = createPanel(urinationLabel, urinationList);
     }
 
     private void createEdemasPanel() {
-        edemasLabel = new JLabel("Отеки:");
+        // отеки
+        var edemasLabel = new JLabel("Отеки:");
         edemasList = createComboBox(EDEMAS_LIST_ITEMS);
         edemasList.setPreferredSize(new Dimension(PREF_WIDTH2, PREF_HEIGHT));
         edemasPanel = createPanel(edemasLabel, edemasList);
     }
 
-    private void createModePanel() {
-        modeLabel = new JLabel("Режим:");
+    private void createCareTypePanel() {
+        var modeLabel = new JLabel("Режим:");
         modeList = createComboBox(MODE_LIST_ITEMS);
         modeList.setPreferredSize(new Dimension(PREF_WIDTH2 + 50, PREF_HEIGHT));
         modePanel = createPanel(modeList);
     }
 
-    private JTextField diagnosisField;
-    private JPanel diagnosisPanel;
 
     public JTextField getDiagnosisField() {
         return diagnosisField;
     }
 
+    // создает панель "Диагноз"
+    private JTextField diagnosisField;
+    private JPanel diagnosisPanel;
     private void createDiagnosisPanel() {
         JLabel diagnosisLabel = new JLabel("Диагноз:");
         diagnosisField = new JTextField(15);
         diagnosisPanel = createPanel(diagnosisLabel, diagnosisField);
     }
 
-    private JLabel examinationTypeLabel;
 
     public JComboBox getbMList() {
         return bMList;
@@ -649,8 +617,8 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return breathingList;
     }
 
-    public JComboBox getBreathingNumberList() {
-        return breathingNumberList;
+    public JComboBox getBreathingAmountList() {
+        return breathingAmountList;
     }
 
     public JComboBox getCmList() {
@@ -713,10 +681,6 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return lymphaticNodesList;
     }
 
-    public JComboBox getMethodsList() {
-        return methodsList;
-    }
-
     public JComboBox getModeList() {
         return modeList;
     }
@@ -731,10 +695,6 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     public JComboBox getPalpationList() {
         return palpationList;
-    }
-
-    public JComboBox getPeriodicityList() {
-        return periodicityList;
     }
 
     public JComboBox getPulseFeaturesList() {
@@ -763,10 +723,6 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     public JComboBox getStomachList() {
         return stomachList;
-    }
-
-    public JComboBox getSystolicNoiseList() {
-        return systolicNoiseList;
     }
 
     public JComboBox getTensionList() {
@@ -813,39 +769,35 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return pasternatskySymptomList;
     }
 
+    // создает панель "Тип осмотра"
     private JComboBox examinationTypeList;
     private JPanel examinationTypePanel;
-
     private void createExaminationTypePanel() {
-        examinationTypeLabel = new JLabel("Тип осмотра");
+        var examinationTypeLabel = new JLabel("Тип осмотра");
         examinationTypeList = createComboBox(EXAMINATION_TYPES_LIST_ITEMS);
         examinationTypePanel = createPanel(examinationTypeLabel, examinationTypeList);
     }
-
-    private JLabel examinationLabel;
-    private JTextArea examinationArea;
-    private JScrollPane examinationScrollPane;
-    private JButton addExaminationButton;
-    private JPanel examinationPanel;
 
     public JTextArea getExaminationArea() {
         return examinationArea;
     }
 
-    // обследование
+    // Панель "обследование"
+    private JTextArea examinationArea;
+    private JPanel examinationPanel;
     private void createExaminationPanel() {
-        examinationLabel = new JLabel("Обследование");
+        var examinationLabel = new JLabel("Обследование");
         examinationArea = createTextArea();
-        examinationScrollPane = new JScrollPane(examinationArea);
+        var examinationScrollPane = new JScrollPane(examinationArea);
         examinationScrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
-        addExaminationButton = new JButton("Добавить");
-        addExaminationButton.addActionListener(event -> controller.addExaminationButtonClicked());
+        var examinationAddButton = new JButton("Добавить");
+        examinationAddButton.addActionListener(event -> controller.examinationAddButtonClicked());
 
-        examinationPanel = createPanel(examinationLabel, examinationScrollPane, addExaminationButton);
+        examinationPanel = createPanel(examinationLabel, examinationScrollPane, examinationAddButton);
     }
 
+    // панель "Лечение"
     private JPanel healingPanel;
-
     private void createHealingPanel() {
         createHealingTabbedPane();
 
@@ -895,8 +847,6 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     private JPanel therapyPanel;
     private JComboBox therapyList;
-    private JComboBox periodicityList;
-    private JComboBox methodsList;
 
     private void createTherapyPanel() {
         createTherapyPreparationsPanel();
@@ -905,12 +855,14 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         therapyPanel = createPanel(therapyList, preparationsPanel);
     }
 
+    // создает панель "Диета"
     private JPanel dietPanel;
     private void createDietPanel() {
         dietList = createComboBox(DIETS_LIST_ITEMS);
         dietPanel = createPanel(dietList);
     }
 
+    // создает панель "Лечение"
     private JTabbedPane healingTabbedPane;
     private JComboBox dietList;
     private void createHealingTabbedPane() {
@@ -933,16 +885,15 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return urgentCarePreparationsArea;
     }
 
-    // неотложная помощь, переименовать кнопку
-    private JButton urgentCareButton;
+    // Панель "неотложная помощь"
     private void createUrgentCarePanel() {
         preparationsLabel = new JLabel("Препараты");
         urgentCarePreparationsArea = createTextArea();
-        urgentCareButton = new JButton("Добавить");
-        urgentCareButton.addActionListener(event -> controller.addUrgentCarePreparationsButtonClicked());
+        var urgentCareAddButton = new JButton("Добавить");
+        urgentCareAddButton.addActionListener(event -> controller.addUrgentCarePreparationsButtonClicked());
 
         urgentCarePanel = createPanel(preparationsLabel, createScrollPane(urgentCarePreparationsArea),
-                urgentCareButton);
+                urgentCareAddButton);
     }
 
     // почки
@@ -960,7 +911,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JComboBox kidneysAreaList;
     private JPanel kidneysAreaPanel;
     private void createKidneysAreaPanel() {
-        JLabel label = new JLabel("Область почек");
+        var label = new JLabel("Область почек");
         kidneysAreaList = createComboBox(KIDNEYS_AREA_LIST_ITEMS);
         kidneysAreaPanel = createPanel(label, kidneysAreaList);
     }
@@ -969,7 +920,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JComboBox pasternatskySymptomList;
     private JPanel pasternatskySymptomPanel;
     private void createPasternatskySymptomPanel() {
-        JLabel label = new JLabel("Симптом Пастернацкого");
+        var label = new JLabel("Симптом Пастернацкого");
         pasternatskySymptomList = createComboBox(PASTERNATSKY_SYMPTOM_LIST_ITEMS);
         pasternatskySymptomPanel = createPanel(label, pasternatskySymptomList);
     }
@@ -978,7 +929,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JComboBox kidneysList;
     private JPanel kidneysPanel;
     private void createKidneysPanel() {
-        JLabel label = new JLabel("Почки");
+        var label = new JLabel("Почки");
         kidneysList = createComboBox(KIDNEYS_LIST_ITEMS);
         kidneysPanel = createPanel(label, kidneysList);
     }
@@ -987,11 +938,12 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
     private JComboBox urinaList;
     private JPanel urinaPanel;
     private void createUrinaPanel() {
-        JLabel label = new JLabel("Моча");
+        var label = new JLabel("Моча");
         urinaList = createComboBox(URINA_LIST_ITEMS);
         urinaPanel = createPanel(label, urinaList);
     }
 
+    // создает кнопку "Создать документ"
     private void createButton() {
         createDocumentButton = new JButton("Создать документ");
         createDocumentButton.addActionListener(e -> controller.createDocumentButtonClicked());
@@ -1001,6 +953,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
 
     }
 
+    // создает текстовую область
     private JTextArea createTextArea() {
         JTextArea textArea = new JTextArea(5, 25);
         textArea.setWrapStyleWord(true);
@@ -1008,12 +961,14 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return textArea;
     }
 
+    // создает колесо прокрутки у переданной в качестве параметра текстовой области area
     private JScrollPane createScrollPane(JTextArea area) {
         JScrollPane pane = new JScrollPane(area);
         pane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         return pane;
     }
 
+    // создает выпадающий список, состоящий из элементов массива words
     private JComboBox<String> createComboBox(String[] words) {
         Vector<String> vector = new Vector<>();
         vector.addAll(Arrays.asList(words));
@@ -1066,6 +1021,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         return panel;
     }
 
+    // создает панель из текстовой метки и выпадающего списка
     private JPanel createPanel(JLabel label, JComboBox list) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.GRAY);
@@ -1094,7 +1050,6 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         box2.add(constipationPanel);
         box2.add(urinationPanel);
         box2.add(edemasPanel);
-        //box2.add(modePanel);
 
         boxPanel.add(box1);
         boxPanel.add(box2);
@@ -1122,31 +1077,28 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
                 new Insets(1, 1, 1, 1), 0, 0));
     }
 
+    // создает чекбокс с текстом label
     private JCheckBox createCheckBox(String label) {
         JCheckBox box = new JCheckBox(label);
         box.setBackground(Color.GRAY);
         return box;
     }
 
+    // создает панель с вкладками
     private JTabbedPane tabbedPane;
     private void createTabbedPane() {
         tabbedPane = new JTabbedPane(SwingConstants.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-        tabbedPane.addTab("АД", arterialPressurePanel);
+        tabbedPane.addTab("А/Д", arterialPressurePanel);
         tabbedPane.addTab("Пульс", pulsePanel);
         tabbedPane.addTab("Сердце", heartPanel);
         tabbedPane.addTab("Почки", kidneysGeneralPanel);
         tabbedPane.addTab("Шумы", commonNoisePanel);
-        tabbedPane.addTab("Дыхание", commonBreathingPanel);
+        tabbedPane.addTab("Дыхание", breathingPanel);
         tabbedPane.addTab("Живот", commonStomachPanel);
         tabbedPane.addTab("Суставы", jointsPanel);
         tabbedPane.addTab("Печень", liverPanel);
     }
 
-    public JCheckBox getAccentBox() {
-        return accentBox;
-    }
-
-    //1182 строк было в этом файле до написания этого класса-контроллера
     private class ExaminationPanelController {
 
         // обработчик нажатия кнопки "Добавить" в области "Жалобы"
@@ -1158,11 +1110,11 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         // обработчик выбора элемента в выпадающем списке "Суставы"
         private void jointsListItemSelected() {
             if (jointsList.getSelectedItem().equals("изменены")) {
-                setEnabledJointsType(true);
+                setEnabledJointsTypePanel(true);
             } else if (jointsList.getSelectedItem().equals("не изменены") ||
                     jointsList.getSelectedIndex() == -1) {
                 jointsTypeList.setSelectedIndex(-1);
-                setEnabledJointsType(false); // че за ебаное название метода ???
+                setEnabledJointsTypePanel(false); // че за ебаное название метода ???
             }
         }
 
@@ -1215,7 +1167,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
         }
 
         // обработчик нажатия кнопки "Добавить" в панели "Обследование"
-        private void addExaminationButtonClicked() {
+        private void examinationAddButtonClicked() {
             ExaminationDialog examinationDialog = new ExaminationDialog();
             examinationDialog.setVisible(true);
         }
@@ -1234,7 +1186,7 @@ public class ExaminationOfTheAdultPanel extends AbstractPanel {
             urgentCarePreparationsDialog.setVisible(true);
         }
 
-        // обработчик нажатия кнопки "Добавить" в панели "Неотложная помощь"
+        // обработчик нажатия кнопки "Создать документ"
         private void createDocumentButtonClicked() {
             ExaminationCreator creator = new ExaminationCreator();
             creator.createDocument();

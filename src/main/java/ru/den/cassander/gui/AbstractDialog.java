@@ -1,12 +1,10 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Created on 06.09.2015.
- *
- * @author Denis Vereshchagin
  */
 abstract class AbstractDialog extends JDialog {
 

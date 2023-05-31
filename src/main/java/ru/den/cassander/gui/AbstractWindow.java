@@ -1,12 +1,10 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Created on 09.08.2015.
- *
- * @author Denis Vereshchagin
  */
 
 abstract class AbstractWindow extends JFrame {

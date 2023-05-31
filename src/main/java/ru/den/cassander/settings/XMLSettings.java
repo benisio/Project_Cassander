@@ -7,16 +7,14 @@ import java.util.List;
  * Created on 10.11.2015
  * Updated on 03.03.2018
  *
- * Класс-посредник между приложением и файлом настроек settings.xml. Получает данные из файла и позволяет их
- * перезаписывать - это предложение - бред. На время работы программы является временным хранилищем настроек после их
+ * Класс для хранения данных, прочитанных из xml-файла настроек.
+ * Класс, хранящий состояние настроек, прочитанных из xml-файла
+ * На время работы программы является временным хранилищем настроек после их
  * чтения из xml и до записи.
- *
- * @author Denis Vereshchagin
- * @since 2.1
  */
 @XmlRootElement(name = "settings")
 @XmlAccessorType(XmlAccessType.NONE) // TODO надо ли исправить на другое значение ?
-public class XMLSettings implements /*DirectoryChooser,*/ Settings {
+public class XMLSettings implements Settings {
 
     @XmlElementWrapper
     @XmlElement(name = "directory")
@@ -54,12 +52,6 @@ public class XMLSettings implements /*DirectoryChooser,*/ Settings {
         this.emptyFieldsCheckEnabled = isEnabled;
     }
 
-    // Тип папки, используемой для хранения документов.
-//    public enum CurrentDirectoryType {
-//        DEFAULT, // папка по умолчанию
-//        CUSTOM   // пользовательская
-//    }
-
     // Возвращает ПУТЬ К ПАПКЕ, используемой ПО УМОЛЧАНИЮ для хранения документов.
     @Override
     public String getDefaultDirectoryPath() {
@@ -76,7 +68,7 @@ public class XMLSettings implements /*DirectoryChooser,*/ Settings {
     /* Возвращает ПУТЬ К ПАПКЕ, ФАКТИЧЕСКИ используемой для хранения документов. Эта папка может отличаться от папки,
     возвращаемой методом XMLSettings#getDefaultDirectoryPath(), если пользователь в настройках выбрал другую папку для
     хранения документов, отличную от папки ПО УМОЛЧАНИЮ. Если же он этого не делал, или же выбрал опцию "Использовать
-    папку по умолчанию", этот метод вертнет тот же результат, что и метод XMLSettings#getDefaultDirectoryPath(). */
+    папку по умолчанию", этот метод вернет тот же результат, что и метод XMLSettings#getDefaultDirectoryPath(). */
     @Override
     public String getCurrentDirectoryPath() {
         return getDirectory(Directory.DirectoryType.CURRENT).getPath();
@@ -115,11 +107,8 @@ public class XMLSettings implements /*DirectoryChooser,*/ Settings {
      */
     static class Directory {
 
-        // Тип папки
-        private DirectoryType type;
-
-        // Путь к данной папке
-        private String path;
+        private DirectoryType type; // тип папки
+        private String path; // путь к данной папке
 
         // Значения, которые может принимать тип папки (атрибут "type" элемента <directory>)
         private enum DirectoryType {

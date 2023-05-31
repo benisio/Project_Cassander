@@ -1,4 +1,4 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,12 +6,10 @@ import java.util.List;
 
 import static ru.den.cassander.Main.getMainWindow;
 import static ru.den.cassander.Constants.*;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.*;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.*;
 
 /**
  * Created on 26.09.2015.
- *
- * @author Denis Vereshchagin
  */
 public class ComplaintsDialog extends AbstractDialog {
 

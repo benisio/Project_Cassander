@@ -5,15 +5,13 @@ import java.io.File;
 
 import ru.den.cassander.settings.Settings;
 import ru.den.cassander.settings.XMLSettingsRW;
-import ru.den.cassander.windows.DirectoryChooserDialog;
+import ru.den.cassander.gui.DirectoryChooserDialog;
 
 import static ru.den.cassander.settings.Settings.CurrentDirectoryType.*;
 
 /**
  * Created on January 2023
  * Класс-обработчик событий диалогового окна "Выбор папки для хранения документов"
- *
- * @author Denis Vereshchagin
  */
 
 public class DirectoryChooserDialogController {

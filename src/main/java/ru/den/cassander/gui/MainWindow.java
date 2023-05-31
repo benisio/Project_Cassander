@@ -1,13 +1,16 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import ru.den.cassander.controllers.MainWindowController;
-import ru.den.cassander.windows.main.ExaminationOfTheAdultPanel;
-import ru.den.cassander.windows.main.PatronagePanel;
+import ru.den.cassander.gui.main.ExaminationOfTheAdultPanel;
+import ru.den.cassander.gui.main.PatronagePanel;
 
 import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static ru.den.cassander.Constants.*;
 
@@ -15,13 +18,20 @@ import static ru.den.cassander.Constants.*;
  * Created on 06.08.2015.
  * Updated on 02.05.2018.
  *
- * Написать здесь, что именно в графическом интерфейсе я называю MainWindow. Что описывает этот класс ?
- *
- * @author Denis Vereshchagin
+ * Класс, создающий GUI стартового окна приложения
  */
 public class MainWindow extends AbstractWindow {
     // TODO 1-я попытка переделать этот класс как Синглтон увенчалась фиаско
     // TODO когда убираешь мышку с открытого списка пунктов меню и кликаешь вне его, меню не закрывается
+
+    // TODO мб имеет смысл завести сюда поле currentPanel и передавать в него значения patronagePanel или examinationPanel
+    // в зависимости от выбранного раздела, и использовать это в обработчике меню "Создать документ"
+    // если currentPanel == patronagePanel, вызывать код обработки кнопки "Создать документ" для "Патронажа", а если
+    // examinationPanel, то для "Осмотра взрослого". Таким образом, можно убрать кнопки "Создать документ" и обойтись только
+    // пунктом меню "Создать документ"
+
+    // TODO свести все TODO в одно место. Мб загуглить про баг-репорты или просто завести отдельный txt файл для перечисления
+    // всех туду или багов
 
     // Полоска меню
     private JMenuBar menuBar;
@@ -51,9 +61,15 @@ public class MainWindow extends AbstractWindow {
     private PatronagePanel patronagePanel;
     private ExaminationOfTheAdultPanel examinationPanel;
 
-    // Todo отправить в xml
-    // Путь к изображению "Cassander"
-    private static final String ICON_PATH = "resources\\mainWindow.png";
+    // загружать картинку главного окна
+    private static JLabel icon;
+    static {
+        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("mainWindow.png")) {
+            icon = new JLabel(new ImageIcon(resourceStream.readAllBytes()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Возвращает true, если установлен чек-бокс напротив пункта меню "Проверка наличия незаполненных полей",
     // и false в противном случае
@@ -61,51 +77,36 @@ public class MainWindow extends AbstractWindow {
         return emptyFieldsCheckItem.isSelected();
     }
 
-    // Настройки // перенести в класс-контроллер ?
-    /*private SettingsRW settingsRW;
-    private Settings settings;
-
-    // это костыль для доступа к этому полю из контроллера
-    public SettingsRW getSettingsRW() {
-        return settingsRW;
-    }*/
-
-    // контроллер // 2,1
-    private MainWindowController controller;
-
-    public MainWindowController getController() {
-        return controller;
-    }
+    private MainWindowController controller; // контроллер
 
     public MainWindow() {
         super(CASSANDER, 1000, 700, DO_NOTHING_ON_CLOSE);
         panel.setBackground(Color.darkGray); // в настройки ?
-        panel.add(new JLabel(new ImageIcon(ICON_PATH))); //MainWindow.class.getResource(ICON_PATH) // и это в настройки ?
+        //panel.add(new JLabel(new ImageIcon(ICON_PATH))); // и это в настройки ? нет, наверное, это в папку ресурсы или в корень
+
+        panel.add(icon); // и это в настройки ? нет, наверное, это в папку ресурсы или в корень
 
         controller = new MainWindowController();
 
-        // создание меню
+        // создание GUI
         createMenu();
+        setGUIAppearance();
 
-        // cлушатель закрытия окна
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 controller.appClosing();
             }
-        });
-/*
-        // чтение настроек
-        settingsRW = new XMLSettingsRW();
-        settings = settingsRW.readSettings();
-
-        // применение настроек к пункту меню "Проверка наличия незаполненных полей"
-        emptyFieldsCheckItem.setState(settings.isEmptyFieldsCheckEnabled());
-*/
+        });// cлушатель закрытия окна
     }
 
-    // TODO не относится к этому проекту ! в меню File -> Open recent почистить список проектов, оставить и сгруппировать
-    // проекты в работе, убрать мусор
+    private void setGUIAppearance() { // устанавливаем внешний вид компонентов типа NimbusLookAndFeel
+        try {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel()); //getSystemLookAndFeelClassName()
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+    }
 
     public PatronagePanel getPatronagePanel() {
         return patronagePanel;
@@ -132,27 +133,27 @@ public class MainWindow extends AbstractWindow {
 
         // создание пункта меню "Новый патронаж"
         newPatronageItem = new JMenuItem(NEW_PATRONAGE);
-        newPatronageItem.addActionListener(e -> controller.newPatronageMenuPressed());
+        newPatronageItem.addActionListener(e -> controller.newPatronageMenuClicked());
         fileMenu.add(newPatronageItem);
 
         // создание пункта меню "Новый осмотр взрослого"
         newExaminationOfTheAdultItem = new JMenuItem(NEW_EXAMINATION_OF_THE_ADULT);
-        newExaminationOfTheAdultItem.addActionListener(e -> controller.newExaminationMenuPressed());
+        newExaminationOfTheAdultItem.addActionListener(e -> controller.newExaminationMenuClicked());
         fileMenu.add(newExaminationOfTheAdultItem);
 
         fileMenu.addSeparator();
 
         // создание пункта меню "Создать документ" // 2.1
         createDocumentItem = new JMenuItem(CREATE_DOCUMENT);
-        createDocumentItem.addActionListener(e -> controller.createDocumentMenuPressed());
+        createDocumentItem.addActionListener(e -> controller.createDocumentMenuClicked());
         fileMenu.add(createDocumentItem);
-        disableCreateDocumentMenuItem();
+        disableCreateDocumentMenu();
 
         fileMenu.addSeparator();
 
         // создание пункта меню "Закрыть"
         closeItem = new JMenuItem(CLOSE);
-        closeItem.addActionListener(e -> controller.closeMenuItemPressed());
+        closeItem.addActionListener(e -> controller.closeMenuClicked());
         fileMenu.add(closeItem);
         disableCloseMenuItem();
 
@@ -168,13 +169,13 @@ public class MainWindow extends AbstractWindow {
     private void createSettingsMenu() {
         settingsMenu = new JMenu(SETTINGS);
 
-        // создание пункта меню "Выбрать папку для хранения документов"
+        // создание пункта меню "Выбор папки для хранения документов"
         chooseDirectoryItem = new JMenuItem(CHOOSE_FOLDER);
-        chooseDirectoryItem.addActionListener(e -> controller.chooseDirectoryMenuItemPressed());
+        chooseDirectoryItem.addActionListener(e -> controller.chooseDirectoryMenuClicked());
         settingsMenu.add(chooseDirectoryItem);
 
         // создание пункта меню "Проверка наличия незаполненных полей"
-        emptyFieldsCheckItem = new JCheckBoxMenuItem(EMPTY_FIELDS_CHECK); // 2.1
+        emptyFieldsCheckItem = new JCheckBoxMenuItem(EMPTY_FIELDS_CHECK);
 
         // применение настроек к пункту меню "Проверка наличия незаполненных полей" TODO разве этот кусок кода не должен находиться в классе-контроллере ??
         emptyFieldsCheckItem.setState(controller.getSettings().isEmptyFieldsCheckEnabled());
@@ -182,7 +183,7 @@ public class MainWindow extends AbstractWindow {
         // добавление слушателя, который меняет соответствующую настройку, если состояние этого пункта меню было изменено
         emptyFieldsCheckItem.addChangeListener(e ->
                 //settings.setEmptyFieldsCheckStatus(emptyFieldsCheckItem.isSelected())); // see // перенести тело лямбды в класс-котроллер
-                controller.emptyFieldsCheckMenuItemChanged()); // see // перенести тело лямбды в класс-котроллер
+                controller.emptyFieldsCheckMenuChanged()); // перенести тело лямбды в класс-контроллер
 
         settingsMenu.add(emptyFieldsCheckItem);
         menuBar.add(settingsMenu);
@@ -194,7 +195,7 @@ public class MainWindow extends AbstractWindow {
 
         // создание пункта "О программе"
         aboutItem = new JMenuItem(ABOUT);
-        aboutItem.addActionListener(e -> controller.aboutMenuItemPressed());
+        aboutItem.addActionListener(e -> controller.aboutMenuClicked());
         helpMenu.add(aboutItem);
 
         menuBar.add(helpMenu);
@@ -229,17 +230,19 @@ public class MainWindow extends AbstractWindow {
         closeItem.setEnabled(false);
     }
 
-    // сходу не придумал нормальный комментарий
+    // устанавливает настройки по умолчанию ??? название метода соответствует комменту и телу метода ?
     public void setDefaultDimension() {
         setSize(1000, 700);
         setLocationRelativeTo(null);
     }
 
-    public void enableCreateDocumentMenuItem() {
+    // разблокировывает пункт меню "Создать документ"
+    public void enableCreateDocumentMenu() {
         createDocumentItem.setEnabled(true);
     }
 
-    public void disableCreateDocumentMenuItem() {
+    // блокирует пункт меню "Создать документ"
+    public void disableCreateDocumentMenu() {
         createDocumentItem.setEnabled(false);
     }
 }

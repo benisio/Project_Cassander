@@ -1,4 +1,4 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,8 +8,6 @@ import static ru.den.cassander.Constants.*;
 
 /**
  * Created on 05.09.2015.
- *
- * @author Denis Vereshchagin
  */
 public class AboutDialog extends AbstractDialog {
 

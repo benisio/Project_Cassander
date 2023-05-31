@@ -13,8 +13,6 @@ import static ru.den.cassander.Constants.EMPTY_STRING;
  * Created on 18.08.2015.
  *
  * Класс, создающий docx-файл "Патронаж", используя введенные данные в окне "Новый патронаж"
- *
- * @author Denis Vereshchagin
  */
 public class PatronageCreator extends AbstractDocumentCreator {
 
@@ -26,6 +24,12 @@ public class PatronageCreator extends AbstractDocumentCreator {
 
     private String textOnField;
 
+    // TODO ошибка: если в настройках в качестве папки для хранения файлов задать путь "C:\", то этот метод выкидывает
+    // FileNotFoundException с сообщением "Отказано в доступе"
+    // но на этом чудеса не заканчиваются: после этого все равно программа показывает окно о том, что файл успешно создан,
+    // хотя он нихуя не создан и ни о каком успехе речи не идет. Данное окно всплывает только при создании файла "Патронаж".
+    // При создании файла "Осмотр взрослого" оно не всплывает
+    // Upd оказывается, я уже сталкивался с этой проблемой - см. ниже.
     @Override
     public void createDocument() {
         try ( FileOutputStream stream = new FileOutputStream(wordDocument) ) {

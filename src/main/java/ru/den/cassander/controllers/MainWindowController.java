@@ -1,10 +1,7 @@
 package ru.den.cassander.controllers;
 
-import ru.den.cassander.document_creators.DocumentCreator;
-import ru.den.cassander.settings.Settings;
-import ru.den.cassander.settings.SettingsRW;
-import ru.den.cassander.settings.XMLSettingsRW;
-import ru.den.cassander.windows.*;
+import ru.den.cassander.settings.*;
+import ru.den.cassander.gui.*;
 
 import javax.swing.*;
 
@@ -13,26 +10,17 @@ import static ru.den.cassander.Main.getMainWindow;
 
 /**
  * Created on 02.05.2018
- * Updated on 02.05.2018
+ * Updated on January 2023
  * <p>
  * Класс-контроллер событий главного окна приложения. Цель данного класса - разделить ГУЙ и обработку событий.
  * Сюда вынести все обработчики нажатий кнопок, меню и т.д.
- *
- * @author Denis Vereshchagin
- * @since 2.1
  */
 public class MainWindowController {
-    // TODO перенести сюда все обработчики нажатия меню и прочих элементов MainWindow, если они есть
-    // TODO оставить в MainWindow только отрисовку GUI
-
-    public DirectoryChooserDialog getDirectoryChooser() {
-        return directoryChooser;
-    }
 
     private DirectoryChooserDialog directoryChooser; // TODO подумать, где на самом деле должно находиться это поле (и должно ли оно быть полем)
 
-    private static short patronageCallCounter = 0;
-    private static short examinationCallCounter = 0;
+    private static int patronageCallCounter = 0;
+    private static int examinationCallCounter = 0;
 
     private SettingsRW settingsRW;
     private Settings settings;
@@ -41,7 +29,7 @@ public class MainWindowController {
         return settings;
     }
 
-    // Конструктор класса
+    // Конструктор
     public MainWindowController() {
         settingsRW = new XMLSettingsRW();
         settings = settingsRW.readSettings();
@@ -51,29 +39,27 @@ public class MainWindowController {
     }
 
     // Обработчик нажатия пункта меню "Новый патронаж"
-    public void newPatronageMenuPressed() {
-        System.out.println("Сработал обработчик нажатия пункта меню \"Новый патронаж\"");
+    public void newPatronageMenuClicked() {
         examinationCallCounter = 0;
 
         if (++patronageCallCounter == 1) { // если вызывает первый раз ????
             getMainWindow().createPatronagePanel();
             getMainWindow().setDefaultDimension();
             MainWindow.enableCloseMenuItem();
-            getMainWindow().enableCreateDocumentMenuItem();
+            getMainWindow().enableCreateDocumentMenu();
         } else {
             getMainWindow().getPatronagePanel().resetComponent(getMainWindow().getPatronagePanel());
         }
     }
 
     // Обработчик нажатия пункта меню "Новый осмотр взрослого"
-    public void newExaminationMenuPressed() {
+    public void newExaminationMenuClicked() {
         patronageCallCounter = 0;
 
         if (++examinationCallCounter == 1) {
-            getMainWindow().createExaminationPanel();
-            //getMainWindow().pack();
+            getMainWindow().createExaminationPanel(); // на выполнение этого метода тратится около 1,8 с
             MainWindow.enableCloseMenuItem();
-            getMainWindow().enableCreateDocumentMenuItem();
+            getMainWindow().enableCreateDocumentMenu();
         } else {
             getMainWindow().getExaminationPanel().resetComponent(getMainWindow().getExaminationPanel());
             getMainWindow().getExaminationPanel().setTherapyPreparationsDialog(new TherapyPreparationsDialog());
@@ -81,10 +67,8 @@ public class MainWindowController {
         }
     }
 
-    private DocumentCreator creator;
-
     // Обработчик нажатия пункта меню "Создать документ"
-    public void createDocumentMenuPressed() {
+    public void createDocumentMenuClicked() {
         System.out.println("Убери кнопки \"Создать документ\" и запили такой же пункт меню!");
 
         // TODO попробовать применить знания по интерфейсам здесь. Вызывать отсюда метод DocumentCreator#createDocument().
@@ -96,46 +80,43 @@ public class MainWindowController {
     }
 
     // Обработчик нажатия пункта меню "Закрыть"
-    public void closeMenuItemPressed() {
+    public void closeMenuClicked() {
         getMainWindow().setContentPane(getMainWindow().getPanel());
         getMainWindow().validate();
-        //getMainWindow().repaint();
 
         MainWindow.disableCloseMenuItem();
-        getMainWindow().disableCreateDocumentMenuItem();
+        getMainWindow().disableCreateDocumentMenu();
         getMainWindow().setTitle(CASSANDER);
         getMainWindow().setDefaultDimension();
         clearCounters();
     }
 
+    // обнуляет счетчики нажатия пунктов меню "Новый патронаж" и "Новый осмотр взрослого"
     private void clearCounters() {
         patronageCallCounter = 0;
         examinationCallCounter = 0;
     }
 
-    // Обработчик нажатия пункта меню "Выход"
-    /*public void exitMenuItemPressed() {
-        System.exit(0);
-    } // см. MainWindow#setOnClose()*/
-
     // Обработчик нажатия пункта меню "Выбор папки для хранения документов"
-    public void chooseDirectoryMenuItemPressed() {
+    public void chooseDirectoryMenuClicked() {
         directoryChooser = new DirectoryChooserDialog();
     }
 
-    // Обработчик установки/сброса пункта меню "Проверка наличия незаполненных полей"
-    public void emptyFieldsCheckMenuItemChanged() {
+    // Обработчик установки/сброса чекбокса в меню "Проверка наличия незаполненных полей"
+    public void emptyFieldsCheckMenuChanged() {
         settings.setEmptyFieldsCheckStatus(getMainWindow().getEmptyFieldsCheckItem().isSelected());
     }
 
     // Обработчик нажатия пункта меню "О программе"
-    public void aboutMenuItemPressed() {
+    public void aboutMenuClicked() {
         AboutDialog aboutDialog = new AboutDialog();
         aboutDialog.setVisible(true);
     }
 
     // Обработчик закрытия приложения (вызывается, когда нажата кнопка Выход или закрывается окно приложения)
     // в нем выполняются действия, которые д.б. выполнены перед закрытием приложения
+    /*сохраняю изменения в настройках тут, то есть перед закрытием приложения. Когда лучше ? здесь или при нажатии кнопки
+    * "Сохранить" в диалоговом окне "Выбор папки для хранения файлов" ?*/
     public void appClosing() {
         int result = JOptionPane.showConfirmDialog(getMainWindow(), "Вы уверены, что хотите выйти из приложения ?",
                 "Подтверждение выхода", JOptionPane.YES_NO_OPTION);
@@ -144,7 +125,5 @@ public class MainWindowController {
             settingsRW.writeSettings(); // сохраняем настройки TODO если они были изменены
             getMainWindow().dispose();
         }
-
-        System.out.println("Сработал метод appClosing() в классе MainWindowController");
     }
 }

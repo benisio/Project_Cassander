@@ -1,6 +1,6 @@
 package ru.den.cassander;
 
-import ru.den.cassander.windows.MainWindow;
+import ru.den.cassander.gui.MainWindow;
 
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
@@ -9,8 +9,6 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
  * Created on 06.08.2015.
  *
  * This class is a point of entrance of the program. It runs the main window of the application
- *
- * @author Denis Vereshchagin
  */
 public class Main {
     // TODO запятые в тексте
@@ -45,10 +43,6 @@ public class Main {
 
     // TODO перенести в settings (почти) все текстовые данные типа элементов списков и загружать оттуда
 
-    // TODO почитать про java.awt.Event. Реализовать событие (например, выход из программы) и передавать его
-    // TODO как параметр в разные обработчики - закрытие окна, нажатие меню "Выйти"
-
     // TODO убрать "защиту от дурака" в главном окне
-    // System.currentTimeMillis(); - текущее время в мс
     // System.getProperty("line.separator"); - возвращает перенос строки
 }

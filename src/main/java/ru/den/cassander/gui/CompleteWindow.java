@@ -1,4 +1,4 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +12,6 @@ import static ru.den.cassander.Utilities.*;
 /**
  * Created on 07.08.2015.
  * Updated on January 2023
- *
- * @author Denis Vereshchagin
  */
 
 public class CompleteWindow extends AbstractWindow {
@@ -79,8 +77,6 @@ public class CompleteWindow extends AbstractWindow {
     /**
      * Created on January 2023
      * Класс-обработчик событий окна "Готово!"
-     *
-     * @author Denis Vereshchagin
      */
     private class CompleteWindowController {
 

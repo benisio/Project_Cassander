@@ -4,23 +4,21 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import ru.den.cassander.windows.CompleteWindow;
-import ru.den.cassander.windows.main.ExaminationOfTheAdultPanel;
+import ru.den.cassander.gui.CompleteWindow;
+import ru.den.cassander.gui.main.ExaminationOfTheAdultPanel;
 
 import javax.swing.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static ru.den.cassander.Main.getMainWindow;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.THERAPY_LIST_FOR_DOCUMENT_ITEMS;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.THERAPY_LIST_FOR_DOCUMENT_ITEMS;
 
 
 /**
  * Created on 06.12.2015.
  *
  * Класс ExaminationCreator.java создает документ *.docx (?), содержащий результаты осмотра взрослого пациента.
- *
- * @author Denis Vereshchagin
  */
 public class ExaminationCreator extends AbstractDocumentCreator {
 
@@ -238,7 +236,7 @@ public class ExaminationCreator extends AbstractDocumentCreator {
         addDot();
 
         addBoldText("Число дыханий ");
-        text = examinationPanel.getBreathingNumberList().getSelectedItem().toString();
+        text = examinationPanel.getBreathingAmountList().getSelectedItem().toString();
         addText(text);
         addBoldText(" в мин.");
     }

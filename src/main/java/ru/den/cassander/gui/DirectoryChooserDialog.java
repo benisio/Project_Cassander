@@ -1,4 +1,4 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,17 +11,11 @@ import static ru.den.cassander.Main.getMainWindow;
 
 /**
  * Created on 06.09.2015.
- * Updated on 05.03.2018.
+ * Updated on January 2023.
  *
  * Диалоговое окно "Выбор папки"
- *
- * @author Denis Vereshchagin
  */
 public class DirectoryChooserDialog extends AbstractDialog {
-
-    // папка с *.txt файлами настроек
-    //private static final String COMMON_FOLDER = "D:\\Патронаж\\";
-    //private static File commonFolder = new File(COMMON_FOLDER);
 
     private DirectoryChooserDialogController controller;
 
@@ -60,8 +54,7 @@ public class DirectoryChooserDialog extends AbstractDialog {
         createSaveButton();
         createRadioButtons();
 
-        // применяем настройки
-        applySettings();
+        applySettings(); // применяем настройки
 
         setVisible(true);
     }
@@ -193,10 +186,4 @@ public class DirectoryChooserDialog extends AbstractDialog {
         chooseCustomDirectoryRB.setSelected(true);
     }
 
-    /*@SuppressWarnings("ResultOfMethodCallIgnored")
-    private static void createCommonFolderIfNeeded() {
-        if (!commonFolder.exists()) {
-            commonFolder.mkdirs();
-        }
-    }*/
 }

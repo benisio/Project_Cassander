@@ -1,17 +1,14 @@
-package ru.den.cassander.windows.main;
+package ru.den.cassander.gui.main;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 import static ru.den.cassander.Constants.EMPTY_STRING;
 
 /**
  * Created on 11.09.2015.
- *
- * @author Denis Vereshchagin
  */
 abstract class AbstractPanel extends JPanel {
 
@@ -58,6 +55,7 @@ abstract class AbstractPanel extends JPanel {
         }
     }
 
+    // устанавливает дату в текстовом поле "Дата"
     protected void fillTheDateField() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateField.setText(dateFormat.format(new Date()) + " г.");

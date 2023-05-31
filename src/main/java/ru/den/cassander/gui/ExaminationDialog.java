@@ -1,22 +1,20 @@
-package ru.den.cassander.windows;
+package ru.den.cassander.gui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 import static ru.den.cassander.Main.getMainWindow;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.BIOCHEMICAL_LIST_ITEMS;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.EXAMINATION_LIST_ITEMS;
-import static ru.den.cassander.windows.main.ExaminationOfTheAdultPanelConstants.LIPIDOGRAM_LIST_ITEMS;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.BIOCHEMICAL_LIST_ITEMS;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.EXAMINATION_LIST_ITEMS;
+import static ru.den.cassander.gui.main.ExaminationOfTheAdultPanelConstants.LIPIDOGRAM_LIST_ITEMS;
 import static ru.den.cassander.Constants.EMPTY_STRING;
 
 /**
  * Created on 29.09.2015.
  *
  * Диалоговое окно "Обследование".
- * Файл -> Новый осмотр взрослого -> кнопка "Добавить"
- *
- * @author Denis Vereshchagin
+ * Открывается при нажатии меню Файл -> Новый осмотр взрослого -> кнопка "Добавить"
  */
 public class ExaminationDialog extends AbstractDialog {
 

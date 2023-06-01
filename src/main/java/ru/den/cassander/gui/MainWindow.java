@@ -9,6 +9,8 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static ru.den.cassander.Constants.*;
 
@@ -59,9 +61,15 @@ public class MainWindow extends AbstractWindow {
     private PatronagePanel patronagePanel;
     private ExaminationOfTheAdultPanel examinationPanel;
 
-    // Todo отправить в xml или не надо ?
-    // Путь к изображению "Cassander"
-    private static final String ICON_PATH = "resources\\mainWindow.png";
+    // загружать картинку главного окна
+    private static JLabel icon;
+    static {
+        try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("mainWindow.png")) {
+            icon = new JLabel(new ImageIcon(resourceStream.readAllBytes()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Возвращает true, если установлен чек-бокс напротив пункта меню "Проверка наличия незаполненных полей",
     // и false в противном случае
@@ -74,7 +82,7 @@ public class MainWindow extends AbstractWindow {
     public MainWindow() {
         super(CASSANDER, 1000, 700, DO_NOTHING_ON_CLOSE);
         panel.setBackground(Color.darkGray); // в настройки ?
-        panel.add(new JLabel(new ImageIcon(ICON_PATH))); // и это в настройки ? нет, наверное, это в папку ресурсы или в корень
+        panel.add(icon); // и это в настройки ? нет, наверное, это в папку ресурсы или в корень
 
         controller = new MainWindowController();
 
@@ -90,8 +98,7 @@ public class MainWindow extends AbstractWindow {
         });// cлушатель закрытия окна
     }
 
-    private void setGUIAppearance() {
-        // устанавливаем внешний вид компонентов типа NimbusLookAndFeel
+    private void setGUIAppearance() { // устанавливаем внешний вид компонентов типа NimbusLookAndFeel
         try {
             UIManager.setLookAndFeel(new NimbusLookAndFeel()); //getSystemLookAndFeelClassName()
         } catch (UnsupportedLookAndFeelException e) {

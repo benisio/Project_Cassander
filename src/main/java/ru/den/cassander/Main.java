@@ -2,9 +2,6 @@ package ru.den.cassander;
 
 import ru.den.cassander.gui.MainWindow;
 
-import javax.swing.*;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-
 /**
  * Created on 06.08.2015.
  *

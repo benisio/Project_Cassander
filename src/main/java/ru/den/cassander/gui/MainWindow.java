@@ -82,8 +82,6 @@ public class MainWindow extends AbstractWindow {
     public MainWindow() {
         super(CASSANDER, 1000, 700, DO_NOTHING_ON_CLOSE);
         panel.setBackground(Color.darkGray); // в настройки ?
-        //panel.add(new JLabel(new ImageIcon(ICON_PATH))); // и это в настройки ? нет, наверное, это в папку ресурсы или в корень
-
         panel.add(icon); // и это в настройки ? нет, наверное, это в папку ресурсы или в корень
 
         controller = new MainWindowController();

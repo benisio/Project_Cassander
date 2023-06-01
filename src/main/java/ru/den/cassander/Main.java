@@ -15,12 +15,13 @@ public class Main {
     // TODO по поводу бланка: представить его в виде карты: ключ - текст, значение - кол-во подчеркиваний
     // TODO comments all around the project
 
+    // TODO в Осмотре взрослого обследования перечисляются в строчку, а не идут каждое с новой строки + добавить пустую строку перед диагнозом
+
     /**
      * Номер текущей версии
      *
      * @since 2.1
      */
-    private static final String VERSION = "2.1"; // TODO добавить в XML и подгружать оттуда
 
     private static MainWindow mainWindow;
 
@@ -30,14 +31,6 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         mainWindow = new MainWindow();
-
-        // устанавливаем внешний вид компонентов типа NimbusLookAndFeel
-        try {
-            UIManager.setLookAndFeel(new NimbusLookAndFeel()); //getSystemLookAndFeelClassName()
-        } catch (UnsupportedLookAndFeelException e) { // UnsupportedLookAndFeelException
-            e.printStackTrace();
-        }
-
         mainWindow.setVisible(true);
     }
 
